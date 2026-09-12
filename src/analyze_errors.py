@@ -30,12 +30,52 @@ def main() -> None:
     df = preds.merge(meta[["asin", "subcategory", "title"]], on="asin", how="left")
     df["subcategory"] = df["subcategory"].fillna("Unknown")
 
+    # NOTE: the corpus's Amazon-Fashion slice ships without a category tree
+    # (categories == [] upstream), so Apparel sub-categories are derived from
+    # product titles. Clearly labelled as title-derived wherever shown.
+    import re
+
+    APPAREL_KW = [
+        ("Dresses", r"\bdress(es)?\b"),
+        ("Shirts & Tops", r"t-?shirt|shirt|top|blouse|tank|polo"),
+        ("Pants & Jeans", r"\bjeans\b|pants|trousers|joggers|leggings|shorts"),
+        ("Shoes", r"shoes|sneakers|boots|sandals|slippers|heels|loafers"),
+        ("Jewelry & Watches", r"necklace|earring|bracelet|ring\b|jewel|watch|anklet|pendant"),
+        ("Socks & Hosiery", r"\bsocks?\b|hosiery|stockings"),
+        ("Hoodies & Sweatshirts", r"hoodie|sweatshirt|pullover|fleece"),
+        ("Jackets & Coats", r"jacket|coat|parka|windbreaker|raincoat|vest"),
+        ("Hats & Caps", r"\bhat\b|cap\b|beanie|headband|bandana"),
+        ("Bags & Wallets", r"\bbag\b|wallet|purse|backpack|handbag|tote|satchel"),
+        ("Belts & Accessories", r"\bbelt\b|scarf|gloves|mitten|tie\b|suspenders"),
+        ("Swimwear", r"swim|bikini|trunks"),
+        ("Underwear & Sleep", r"underwear|bra\b|panties|boxer|pajama|lingerie|nightwear|sleep"),
+        ("Costumes & Cosplay", r"costume|cosplay|halloween"),
+        ("Wristbands & Straps", r"wristband|wristband|strap|armband"),
+    ]
+
+    def apparel_sub(row):
+        if not (row["label"] == "Apparel"
+                and (pd.isna(row["subcategory"]) or row["subcategory"] == "Unknown")):
+            return row["subcategory"]
+        t = str(row["title"]).lower()
+        for name, pat in APPAREL_KW:
+            if re.search(pat, t):
+                return f"{name} (title-derived)"
+        return "Other apparel (title-derived)"
+
+    df["subcategory"] = df.apply(apparel_sub, axis=1)
+
     wrong = df[df["correct"] == 0]
     lines = [
         "# Error analysis - which product types confuse the model?",
         "",
         f"Test images: **{len(df)}** | misclassified: **{len(wrong)}** "
         f"({len(wrong)/len(df):.2%})",
+        "",
+        "> Sub-category names marked *(title-derived)* come from product titles:",
+        "the corpus's Amazon-Fashion slice ships without a category tree",
+        "(`categories == []` upstream), so Apparel sub-categories are derived",
+        "from titles with a transparent keyword rule.",
         "",
     ]
 

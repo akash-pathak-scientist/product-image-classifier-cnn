@@ -1,0 +1,60 @@
+{
+  "test_accuracy": 0.9171,
+  "tta_flip": true,
+  "test_n": 3114,
+  "val_accuracy_best": 0.9200128493414712,
+  "best_epoch": 1,
+  "classes": [
+    "Apparel",
+    "Electronics",
+    "Home"
+  ],
+  "per_class_support": {
+    "Apparel": 1029,
+    "Electronics": 1038,
+    "Home": 1047
+  },
+  "confusion_matrix": [
+    [
+      941,
+      37,
+      51
+    ],
+    [
+      15,
+      955,
+      68
+    ],
+    [
+      24,
+      63,
+      960
+    ]
+  ],
+  "per_pair_errors": {
+    "Apparel -> Electronics": {
+      "count": 37,
+      "rate_within_true": 0.036
+    },
+    "Apparel -> Home": {
+      "count": 51,
+      "rate_within_true": 0.0496
+    },
+    "Electronics -> Apparel": {
+      "count": 15,
+      "rate_within_true": 0.0145
+    },
+    "Electronics -> Home": {
+      "count": 68,
+      "rate_within_true": 0.0655
+    },
+    "Home -> Apparel": {
+      "count": 24,
+      "rate_within_true": 0.0229
+    },
+    "Home -> Electronics": {
+      "count": 63,
+      "rate_within_true": 0.0602
+    }
+  }
+}

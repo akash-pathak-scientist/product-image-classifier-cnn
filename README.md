@@ -8,14 +8,14 @@
 
 | Metric | Value |
 |---|---|
-| Test accuracy (held-out, n=1871) | **RESULT_TEST_ACC** |
-| Best validation accuracy | **RESULT_VAL_ACC** (epoch RESULT_BEST_EP) |
+| Test accuracy (held-out, n=3,114, flip-TTA) | **91.71%** |
+| Best validation accuracy | **92.10%** peak (epoch 5/8); shipped checkpoint: 92.00% val → **91.71%** test |
 | Final model | MobileNetV3-Small, **1.52 M params**, ImageNet-pretrained, fine-tuned |
-| Baseline | ProductCNN from scratch, 0.63 M params → val **RESULT_SCRATCH_ACC** (underfits) |
+| Baseline | ProductCNN from scratch, 0.63 M params → val **84.1%** (underfits) |
 | Input | 224 × 224 RGB, ImageNet-normalised (+ horizontal-flip TTA at eval) |
 | Classes | Apparel / Electronics / Home |
 
-**Headline confusions (test set):** RESULT_PAIR_SUMMARY
+**Headline confusions (test set):** **Electronics -> Home**: 68 imgs (6.6% of that true class); **Home -> Electronics**: 63 imgs (6.0% of that true class); **Apparel -> Home**: 51 imgs (5.0% of that true class)
 
 Full numbers: [`reports/metrics.json`](reports/metrics.json) · [`reports/classification_report.txt`](reports/classification_report.txt) · confusion matrix below.
 
@@ -23,11 +23,18 @@ Full numbers: [`reports/metrics.json`](reports/metrics.json) · [`reports/classi
 
 ## Why the model still fumbles those pairs
 
-Every misclassified test image was traced back to its catalogue sub-category — see [`reports/error_analysis.md`](reports/error_analysis.md). Summary: RESULT_WHY_SUMMARY
+Every misclassified test image was traced back to its catalogue sub-category — see [`reports/error_analysis.md`](reports/error_analysis.md). Summary: **Electronics → Home** — **Computers & Accessories** - 17 images, e.g. *"1080P Webcam with Microphone, Computer USB Web Camera Full HD for Windows 10 8 7 XP Mac OS"*; **Unknown** - 13 images, e.g. *"EOS Meraki MX60 Enterprise License and Support, 3 Years, Electronic Delivery"*<br>**Home → Electronics** — **Kitchen & Dining** - 22 images, e.g. *"De'Longhi Stilosa Manual Espresso Machine, Latte & Cappuccino Maker & Stainless Steel Milk"*; **Home Décor Products** - 11 images, e.g. *"Karlsson Wall Clock Platinum Record Aluminum, Silver"*<br>**Apparel → Home** — **Other apparel (title-derived)** - 17 images, e.g. *"Pierced Owl - Organic Coconut Wood Saddle Fit Solid Plugs, Sold as a Pair"*; **Jewelry & Watches (title-derived)** - 7 images, e.g. *"10K Yellow Gold Cherub Angel Pendant Praying Angel 1 inch"*
 
 Representative misclassifications (real test images):
 
-RESULT_MISCLASS_TABLE
+| misclassified test image | true → predicted |
+|---|---|
+| ![misclassified example](reports/examples_misclassified/true-apparel_pred-electronics_B075HN3NNL.jpg) | Apparel → Electronics |
+| ![misclassified example](reports/examples_misclassified/true-apparel_pred-home_B009AXYJ0K.jpg) | Apparel → Home |
+| ![misclassified example](reports/examples_misclassified/true-electronics_pred-apparel_B002DQSL5A.jpg) | Electronics → Apparel |
+| ![misclassified example](reports/examples_misclassified/true-electronics_pred-home_B07BZ67B9H.jpg) | Electronics → Home |
+| ![misclassified example](reports/examples_misclassified/true-home_pred-apparel_B019GKUWHK.jpg) | Home → Apparel |
+| ![misclassified example](reports/examples_misclassified/true-home_pred-electronics_B0796GW6R6.jpg) | Home → Electronics |
 
 ## Repository layout
 
@@ -85,7 +92,7 @@ Or skip step 1 by grabbing `dataset.zip` from the [Releases](../../releases) pag
 | Sampling | 7,000 products per domain, sampled from 16 random byte-offset windows of the public JSONL files, filtered to products with a usable `large` image |
 | Images | Amazon product CDN, normalised to ≤256 px JPEG, EXIF-rotated, RGB |
 | Cleaning | dead/undecodable URLs dropped, duplicate-content images removed (SHA-1) → **20,754 kept** |
-| Split | stratified **70 / 15 / 15** (seed 42) → RESULT_SPLIT_LINE |
+| Split | stratified **70 / 15 / 15** (seed 42) → **14,527 train / 3,113 val / 3,114 test** |
 
 > Why not a literal Flipkart image dump? The well-known Flipkart/Myntra product-image dumps live behind Kaggle's login wall, which breaks open, one-click reproduction. The Amazon Reviews 2023 corpus is the fully public equivalent (same three retail domains, real Indian/global marketplace-style imagery) and is the standard academic citation for e-commerce product data.
 
