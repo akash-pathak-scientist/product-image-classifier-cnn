@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+build/
+data/raw/
+data/splits/
+data/*.zip
+dataset.zip
+bundle_stage/
+runs/
+*.log
+.DS_Store
