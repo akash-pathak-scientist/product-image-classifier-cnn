@@ -19,8 +19,16 @@ from src import config as C
 
 def main() -> None:
     root = Path(__file__).resolve().parents[1]
-    preds = pd.read_csv(C.REPORTS_DIR / "test_predictions.csv")
-    meta = pd.read_csv(root / "data" / "metadata.csv", dtype={"asin": str})
+    pred_path = C.REPORTS_DIR / "test_predictions.csv"
+    if not pred_path.exists():
+        raise FileNotFoundError(
+            f"{pred_path} not found — run `python -m src.evaluate` first to generate test predictions."
+        )
+    meta_path = root / "data" / "metadata.csv"
+    if not meta_path.exists():
+        raise FileNotFoundError(f"{meta_path} not found — did you unzip dataset.zip or run sample_metadata?")
+    preds = pd.read_csv(pred_path)
+    meta = pd.read_csv(meta_path, dtype={"asin": str})
 
     norm = lambda a: a.lstrip("0") if isinstance(a, str) and a.isdigit() else a
     # file names are <Label>/<asin>.jpg  (asin may have lost leading zeros)
