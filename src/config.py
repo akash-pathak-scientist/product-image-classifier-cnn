@@ -1,4 +1,6 @@
 """Central configuration for the Product-Image Classifier project."""
+from __future__ import annotations
+
 from pathlib import Path
 
 # ---------------------------------------------------------------- paths ----
