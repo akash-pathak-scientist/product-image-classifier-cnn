@@ -1,0 +1,98 @@
+From 9b92e61626b4df406d5cbd98015b6f799c27ebd1 Mon Sep 17 00:00:00 2001
+From: akash-pathak-scientist
+ <321365498+akash-pathak-scientist@users.noreply.github.com>
+Date: Wed, 23 Sep 2026 05:12:51 +0000
+Subject: [PATCH] fix: portfolio real email, tone down production-grade, add
+ P07, make data sources explicit (real vs simulated)
+
+---
+ index.html | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/index.html b/index.html
+index da02699..de2b9c1 100644
+--- a/index.html
++++ b/index.html
+@@ -285,7 +285,7 @@ footer strong{color:var(--accent);}
+     <a class="na" href="#stack">Stack</a>
+     <a class="na" href="#certs">Certs</a>
+     <a class="na" href="https://github.com/akash-pathak-scientist" target="_blank">GitHub ↗</a>
+-    <a class="nhire" href="mailto:akash.pathak@email.com">Hire Me →</a>
++    <a class="nhire" href="mailto:akashpathak.in@gmail.com">Hire Me →</a>
+   </div>
+ </nav>
+ 
+@@ -345,7 +345,7 @@ footer strong{color:var(--accent);}
+         <div class="picon">🏦</div>
+         <div><div class="ptitle">FinTech Transaction Analytics</div><div class="pdomain">Banking & Payments · Full-Stack Analytics</div></div>
+       </div>
+-      <p class="pdesc">End-to-end pipeline on 15,000 payment transactions — KPIs, MoM trends, merchant intelligence, RFM segmentation, fraud signals, and a live Flask dashboard with 12 REST APIs.</p>
++      <p class="pdesc">End-to-end pipeline on <strong>15,000 transactions (simulated FinTech sandbox)</strong> — KPIs, MoM trends, merchant intelligence, RFM segmentation, fraud signals, and a live Flask dashboard with 12 REST APIs.</p>
+       <ul class="presults">
+         <li>🔴 Identified ₹1.45Cr at-risk volume via 3 fraud signal detectors</li>
+         <li>👥 RFM segmented 2,982 users → Champion · Loyal · At Risk · Dormant</li>
+@@ -375,7 +375,7 @@ footer strong{color:var(--accent);}
+         <div class="picon">🛡️</div>
+         <div><div class="ptitle">Credit Card Fraud Detection</div><div class="pdomain">Risk & Fraud · Machine Learning</div></div>
+       </div>
+-      <p class="pdesc">ML pipeline on 50,000 transactions with extreme class imbalance (0.174% fraud). 4 models trained and benchmarked — Random Forest achieves 98.14% AUC-ROC.</p>
++      <p class="pdesc">ML pipeline on <strong>50,000 transactions (public credit-card fraud, anonymized — real)</strong> with extreme imbalance (0.174% fraud). 4 models benchmarked — Random Forest 98.14% AUC-ROC.</p>
+       <ul class="presults">
+         <li>🤖 Random Forest → 98.14% AUC-ROC (best model)</li>
+         <li>⚖️ Handled imbalance via class_weight="balanced"</li>
+@@ -405,7 +405,7 @@ footer strong{color:var(--accent);}
+         <div class="picon">🛒</div>
+         <div><div class="ptitle">Customer & Sales Analytics</div><div class="pdomain">Retail / CRM · Business Intelligence</div></div>
+       </div>
+-      <p class="pdesc">Full customer analytics pipeline on 50,000 customers & 200,000 orders (₹69.7Cr revenue) — RFM segmentation, cohort retention, LTV modeling, churn prediction.</p>
++      <p class="pdesc">Full customer analytics on <strong>50,000 customers & 200,000 orders (simulated retail, ₹69.7Cr)</strong> — RFM, cohort retention, LTV & churn.</p>
+       <ul class="presults">
+         <li>👥 KMeans RFM → Champion · Loyal · At Risk · Dormant</li>
+         <li>🔄 12-cohort × 6-month retention heatmap — Month 3 critical drop-off</li>
+@@ -435,7 +435,7 @@ footer strong{color:var(--accent);}
+         <div class="picon">📊</div>
+         <div><div class="ptitle">Finance / MIS Dashboard</div><div class="pdomain">Corporate Finance · CFO Reporting</div></div>
+       </div>
+-      <p class="pdesc">CFO-level MIS across 24 months & 8 departments — P&L waterfall, EBITDA bridge, budget variance RAG status, cash flow analysis & YoY comparison.</p>
++      <p class="pdesc">CFO-level MIS across <strong>24 months & 8 departments (simulated finance)</strong> — P&L waterfall, EBITDA bridge, budget variance RAG & YoY.</p>
+       <ul class="presults">
+         <li>💰 FY2024 Revenue ₹13.07Cr | YoY +16.9% growth</li>
+         <li>⚡ EBITDA ₹1.71Cr (13.1% margin) | PAT ₹1.03Cr</li>
+@@ -465,7 +465,7 @@ footer strong{color:var(--accent);}
+         <div class="picon">₿</div>
+         <div><div class="ptitle">Crypto & Payment Analytics</div><div class="pdomain">Blockchain · Web3 · DeFi Analytics</div></div>
+       </div>
+-      <p class="pdesc">On-chain analytics across 6 blockchains · 500K transactions · $2.33B volume — OHLCV price action, whale detection, wallet segmentation, DeFi TVL & cross-chain correlation.</p>
++      <p class="pdesc">On-chain analytics across <strong>6 blockchains · 500K transactions (simulated, $2.33B)</strong> — OHLCV, whale detection, wallet segmentation, DeFi TVL & cross-chain correlation.</p>
+       <ul class="presults">
+         <li>₿ 6-chain OHLCV + BTC candlestick chart (365 days)</li>
+         <li>🐋 1,500 whale txns detected — disproportionate volume control</li>
+@@ -672,7 +672,7 @@ footer strong{color:var(--accent);}
+   <div class="dc"><div class="dc-icon">🎯</div><div><div class="dc-title">Business-First Thinking</div><div class="dc-sub">I frame the business problem before opening a dataset. Every analysis starts with a question that matters to a decision-maker.</div></div></div>
+   <div class="dc"><div class="dc-icon">🔗</div><div><div class="dc-title">Full-Stack Analytics</div><div class="dc-sub">Every project: SQL + Python + Dashboard — a complete pipeline. Not just isolated scripts or charts.</div></div></div>
+   <div class="dc"><div class="dc-icon">💬</div><div><div class="dc-title">Stakeholder-Ready Insights</div><div class="dc-sub">Insights written for CFOs, PMs, and business teams — not just data reviewers. Clarity over complexity, always.</div></div></div>
+-  <div class="dc"><div class="dc-icon">🏗️</div><div><div class="dc-title">Production-Grade Code</div><div class="dc-sub">Flask REST APIs, modular Python, clean SQL with Window Functions & CTEs — code that actually runs.</div></div></div>
++  <div class="dc"><div class="dc-icon">🏗️</div><div><div class="dc-title">Clean, Portfolio-Ready Code</div><div class="dc-sub">Modular Python, clean SQL (Window Functions & CTEs), Flask REST APIs — portfolio demos that run end-to-end.</div></div></div>
+   <div class="dc"><div class="dc-icon">🧠</div><div><div class="dc-title">Deep Learning, Measured</div><div class="dc-sub">CNN product classifier at 91.71% test accuracy on 20,754 real e-commerce images — with honest baselines and full confusion-matrix analysis.</div></div></div>
+ </div>
+ 
+@@ -690,7 +690,7 @@ footer strong{color:var(--accent);}
+   <h2>💬 Let's Build Something Together</h2>
+   <p>Open to Data Analyst roles · Collaborations · Freelance Analytics Projects · India & Remote</p>
+   <div class="ctabtns">
+-    <a class="btnp" href="mailto:akash.pathak@email.com">📧 Email Me</a>
++    <a class="btnp" href="mailto:akashpathak.in@gmail.com">📧 Email Me</a>
+     <a class="btno" href="https://linkedin.com/in/akash-pathak-data-scientist" target="_blank">💼 LinkedIn</a>
+     <a class="btno" href="https://github.com/akash-pathak-scientist" target="_blank">🐙 GitHub</a>
+   </div>
+@@ -708,6 +708,7 @@ footer strong{color:var(--accent);}
+     <a href="https://github.com/akash-pathak-scientist/finance-mis-dashboard" target="_blank">P04: Finance</a>
+     <a href="https://github.com/akash-pathak-scientist/crypto-payment-analytics" target="_blank">P05: Crypto</a>
+     <a href="https://github.com/akash-pathak-scientist/careerpilot-ai" target="_blank">P06: CareerPilot AI</a>
++    <a href="https://github.com/akash-pathak-scientist/product-image-classifier-cnn" target="_blank">P07: CNN Classifier</a>
+   </div>
+   <div style="margin-top:.8rem;font-size:.72rem;color:rgba(255,255,255,.1);">SQL · Python · Power BI · Machine Learning · Flask · Blockchain</div>
+ </footer>
+-- 
+2.39.5
+

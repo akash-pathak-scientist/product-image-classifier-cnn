@@ -118,3 +118,32 @@ git add README.md && git commit -m "fix: Email badge -> mailto, tone down produc
 ```
 
 Or apply the diff: see `git diff 23f8bc7..6e7a037` in `/tmp/profile`.
+
+---
+
+## 7. Portfolio (https://akash-pathak-scientist.github.io) — make it real
+
+**Fixed locally in `/tmp/portfolio` (commit 9b92e61, patches provided):**
+
+- `index.html:288,693` — `akash.pathak@email.com` (fake) → `akashpathak.in@gmail.com` (real, from `gh api users`)
+- `index.html:675` — `Production-Grade Code` → `Clean, Portfolio-Ready Code` (portfolio demos)
+- `index.html` — added explicit data source labels per project:
+  - P01 `15,000 transactions (simulated FinTech sandbox)`
+  - P02 `50,000 transactions (public credit-card fraud, anonymized — real)`
+  - P03 `50k customers & 200k orders (simulated retail)`
+  - P04 `24 months & 8 departments (simulated finance)`
+  - P05 `500k transactions (simulated, $2.33B)`
+  - P07 `20,754 real images (Amazon Reviews 2023)` already real
+- Added P07 CNN to footer links (was missing)
+- Push blocked (403) — apply manually:
+
+```bash
+git clone https://github.com/akash-pathak-scientist/akash-pathak-scientist.github.io.git
+cd akash-pathak-scientist.github.io
+git apply ../product-image-classifier-cnn/docs/portfolio_index_fix.patch
+git add index.html && git commit -m "fix: real email, tone down production-grade, data honesty, add P07" && git push
+```
+
+Patches are in `docs/portfolio_index_fix.patch` and `docs/profile_README_fix.patch` in this branch.
+
+**Also update GitHub Settings → Profile → Website (blog):** Currently `linkedin.com/in/...`, consider changing to `https://akash-pathak-scientist.github.io` so your portfolio link is one-click from profile header.
