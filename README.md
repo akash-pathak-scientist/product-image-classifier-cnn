@@ -68,8 +68,8 @@ Open `notebooks/product_image_classifier_colab.ipynb` in Colab (Runtime → T4 G
 pip install -r requirements.txt
 
 # 1) build the dataset from public sources (~170 MB download)
-python -m src.data.sample_metadata    # stream-sample 12.6k public product records
-python -m src.data.fetch_images       # download + validate + dedup images
+python -m src.data.sample_metadata    # stream-sample 21k public product records (7k/class)
+python -m src.data.fetch_images       # download + validate + dedup images → 20,754 kept
 python -m src.data.prepare            # stratified 70/15/15 split (seed=42)
 
 # 2) train + evaluate

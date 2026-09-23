@@ -22,7 +22,7 @@ from PIL import Image, ImageOps
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from src.config import (FETCH_TIMEOUT, FETCH_WORKERS, JPEG_QUALITY, MAX_SIDE,
-                        RAW_DIR)
+                        RAW_DIR, RAW_DIR_ALT, resolve_image_path)
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; product-image-classifier/1.0; research)"}
 _tls = threading.local()
@@ -57,10 +57,16 @@ def process(content: bytes) -> bytes | None:
 
 def fetch_one(task) -> dict | None:
     asin, label, rel, urls = task
-    if (RAW_DIR / rel).exists():                    # already fetched earlier
-        data = (RAW_DIR / rel).read_bytes()
-        return {"asin": asin, "label": label, "file": rel,
-                "sha1": hashlib.sha1(data).hexdigest(), "bytes": len(data)}
+    # fallback-aware: skip if already exists in either raw location
+    for cand in (RAW_DIR / rel, RAW_DIR_ALT / rel):
+        if cand.exists():
+            data = cand.read_bytes()
+            # ensure primary has a copy for consistency (copy from alt if needed)
+            if not (RAW_DIR / rel).exists():
+                (RAW_DIR / rel).parent.mkdir(parents=True, exist_ok=True)
+                (RAW_DIR / rel).write_bytes(data)
+            return {"asin": asin, "label": label, "file": rel,
+                    "sha1": hashlib.sha1(data).hexdigest(), "bytes": len(data)}
     s = _session()
     for u in urls:
         if not isinstance(u, str) or not u:
@@ -74,6 +80,13 @@ def fetch_one(task) -> dict | None:
                 continue
             (RAW_DIR / rel).parent.mkdir(parents=True, exist_ok=True)
             (RAW_DIR / rel).write_bytes(data)
+            # also mirror to alt for notebook compatibility (best-effort)
+            try:
+                (RAW_DIR_ALT / rel).parent.mkdir(parents=True, exist_ok=True)
+                if not (RAW_DIR_ALT / rel).exists():
+                    (RAW_DIR_ALT / rel).write_bytes(data)
+            except Exception:
+                pass
             return {"asin": asin, "label": label, "file": rel,
                     "sha1": hashlib.sha1(data).hexdigest(),
                     "bytes": len(data)}
