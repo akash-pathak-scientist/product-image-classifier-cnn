@@ -32,7 +32,13 @@ from src.train import ProductDS
 
 def main() -> None:
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    ckpt = torch.load(C.MODELS_DIR / "best.pt", map_location=device, weights_only=False)
+    ckpt_path = C.MODELS_DIR / "best.pt"
+    if not ckpt_path.exists():
+        raise FileNotFoundError(
+            f"Checkpoint not found: {ckpt_path}. Train first with `python -m src.train` "
+            f"or download from Releases."
+        )
+    ckpt = torch.load(ckpt_path, map_location=device, weights_only=False)
     classes = ckpt["classes"]
     mean, std = ckpt["mean"], ckpt["std"]
 
@@ -41,7 +47,8 @@ def main() -> None:
                  interpolation=T.InterpolationMode.BILINEAR),
         T.ToTensor(), T.Normalize(mean, std),
     ])
-    test_ds = ProductDS(C.SPLIT_DIR / "test.csv", tf)
+    # fallback-aware split path (supports data/splits/ and splits/)
+    test_ds = ProductDS(C.get_split_path("test.csv"), tf)
     loader = DataLoader(test_ds, batch_size=64, shuffle=False, num_workers=1)
 
     model = build_model(ckpt.get("arch", "productcnn"),
@@ -155,9 +162,17 @@ def main() -> None:
         if (t, p) in seen:                           # cover every pair
             continue
         seen.add((t, p))
-        src = C.RAW_DIR / test_df.iloc[idx]["file"]
+        src = C.resolve_image_path(test_df.iloc[idx]["file"])
         dst = ex_dir / f"true-{t.lower()}_pred-{p.lower()}_{Path(test_df.iloc[idx]['file']).stem[:24]}.jpg"
-        shutil.copy(src, dst)
+        try:
+            shutil.copy(src, dst)
+        except FileNotFoundError:
+            # fallback: try alt raw dir explicitly
+            alt = C.RAW_DIR_ALT / test_df.iloc[idx]["file"]
+            if alt.exists():
+                shutil.copy(alt, dst)
+            else:
+                continue
         picked += 1
         if picked >= 12:
             break

@@ -81,7 +81,15 @@ python -m src.analyze_errors          # per-sub-category confusion breakdown
 python -m src.predict path/to/product.jpg
 ```
 
-Or skip step 1 by grabbing `dataset.zip` from the [Releases](../../releases) page and unzipping it in the repo root.
+Or skip step 1 by grabbing `dataset.zip` from the [Releases](../../releases) page and unzipping it in the repo root (the code accepts images in either `build/raw/` or `data/raw/` and splits in either `data/splits/` or `splits/` — both layouts are handled automatically).
+
+### Verify installation
+
+```bash
+python check_repo.py        # fast health check without GPU/torch (~1 sec)
+# or
+python -m src.analyze_errors  # should succeed if reports/test_predictions.csv exists
+```
 
 ## Dataset
 

@@ -29,7 +29,7 @@ def predict_ckpt(ckpt_path: str, files_df, size: int, device: str):
                         num_classes=len(ck["classes"]), pretrained=False).to(device)
     model.load_state_dict(ck["model"])
     model.eval()
-    ds = ProductDS(C.SPLIT_DIR / "test.csv", make_eval_tf(size))
+    ds = ProductDS(C.get_split_path("test.csv"), make_eval_tf(size))
     loader = DataLoader(ds, batch_size=24, num_workers=1, prefetch_factor=1)
     probs = []
     with torch.no_grad():
@@ -41,7 +41,7 @@ def predict_ckpt(ckpt_path: str, files_df, size: int, device: str):
 
 def main() -> None:
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    ds = ProductDS(C.SPLIT_DIR / "test.csv", make_eval_tf(224))
+    ds = ProductDS(C.get_split_path("test.csv"), make_eval_tf(224))
     y_true = ds.df["label"].map(lambda c: C.CLASSES.index(c)).to_numpy()
 
     p224, ck224 = predict_ckpt(C.MODELS_DIR / "best.pt", ds.df, 224, device)

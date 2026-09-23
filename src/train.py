@@ -56,14 +56,27 @@ class ProductDS(Dataset):
         import pandas as pd
         self.df = pd.read_csv(csv_path)
         self.tf = tf
-        self.root = C.RAW_DIR
+        # fallback-aware image root (supports both build/raw and data/raw)
+        self.root = C.get_raw_dir()
+        # allow csv_path to be resolved via fallback as well (handles stale callers)
+        self.csv_path = Path(csv_path)
 
     def __len__(self):
         return len(self.df)
 
     def __getitem__(self, i):
         r = self.df.iloc[i]
-        img = Image.open(self.root / r["file"]).convert("RGB")
+        # try primary then fallback image locations
+        p = C.resolve_image_path(r["file"])
+        if not p.exists():
+            # last resort: try alt root explicitly
+            p = self.root / r["file"]
+        if not p.exists():
+            raise FileNotFoundError(
+                f"Image not found: {r['file']} — checked {C.RAW_DIR} and {C.RAW_DIR_ALT}. "
+                f"Did you run `python -m src.data.fetch_images` or unzip dataset.zip?"
+            )
+        img = Image.open(p).convert("RGB")
         return self.tf(img), C.CLASSES.index(r["label"])
 
 
@@ -107,8 +120,17 @@ def main() -> None:
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"device: {device} | torch {torch.__version__}")
 
-    train_ds = ProductDS(C.SPLIT_DIR / "train.csv", make_train_tf(size))
-    val_ds = ProductDS(C.SPLIT_DIR / "val.csv", make_eval_tf(size))
+    # fallback-aware split resolution (supports both data/splits/ and splits/)
+    train_csv = C.get_split_path("train.csv")
+    val_csv = C.get_split_path("val.csv")
+    for p in (train_csv, val_csv):
+        if not p.exists():
+            raise FileNotFoundError(
+                f"Split CSV not found: {p}. Checked {C.SPLIT_DIR} and {C.SPLIT_DIR_ALT}. "
+                f"Did you run `python -m src.data.prepare` or unzip dataset.zip?"
+            )
+    train_ds = ProductDS(train_csv, make_train_tf(size))
+    val_ds = ProductDS(val_csv, make_eval_tf(size))
     nw = 1 if device == "cpu" else 2        # keep RAM low on small boxes
     train_ld = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True,
                           num_workers=nw, pin_memory=(device == "cuda"),

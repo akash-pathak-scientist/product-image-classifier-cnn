@@ -16,10 +16,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.model import build_model
 
 
-def load_model():
+def load_model(checkpoint: str | Path | None = None):
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    ckpt = torch.load(Path(__file__).resolve().parents[1] / "models" / "best.pt",
-                      map_location=device, weights_only=False)
+    ckpt_path = Path(checkpoint) if checkpoint else Path(__file__).resolve().parents[1] / "models" / "best.pt"
+    if not ckpt_path.exists():
+        raise FileNotFoundError(
+            f"Checkpoint not found: {ckpt_path}. "
+            f"Available: {list((Path(__file__).resolve().parents[1] / 'models').glob('*.pt'))}"
+        )
+    ckpt = torch.load(ckpt_path, map_location=device, weights_only=False)
     model = build_model(ckpt.get("arch", "productcnn"),
                         num_classes=len(ckpt["classes"]), pretrained=False)
     model.load_state_dict(ckpt["model"])

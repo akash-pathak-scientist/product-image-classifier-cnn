@@ -4,10 +4,56 @@ from pathlib import Path
 # ---------------------------------------------------------------- paths ----
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
-RAW_DIR = ROOT / "build" / "raw"      # bulky images live in build/ (snapshot-excluded)
-SPLIT_DIR = DATA_DIR / "splits"       # train.csv / val.csv / test.csv
+RAW_DIR = ROOT / "build" / "raw"      # primary: bulky images (snapshot-excluded, .gitignore: build/)
+RAW_DIR_ALT = ROOT / "data" / "raw"   # fallback: dataset.zip / notebook extracts here
+SPLIT_DIR = DATA_DIR / "splits"       # primary: train.csv / val.csv / test.csv
+SPLIT_DIR_ALT = ROOT / "splits"       # fallback: tracked in git (data/splits is gitignored)
 MODELS_DIR = ROOT / "models"
 REPORTS_DIR = ROOT / "reports"
+
+
+def get_splits_dir() -> Path:
+    """Return the splits directory that actually contains CSVs (fallback-aware)."""
+    if (SPLIT_DIR / "train.csv").exists():
+        return SPLIT_DIR
+    if (SPLIT_DIR_ALT / "train.csv").exists():
+        return SPLIT_DIR_ALT
+    return SPLIT_DIR  # default for writing (will be created)
+
+
+def get_split_path(name: str) -> Path:
+    """Resolve a single split CSV (e.g. 'train.csv') with fallback."""
+    p = SPLIT_DIR / name
+    if p.exists():
+        return p
+    p2 = SPLIT_DIR_ALT / name
+    if p2.exists():
+        return p2
+    return p
+
+
+def get_raw_dir() -> Path:
+    """Return the image root that actually contains data (fallback-aware)."""
+    # prefer whichever has at least one class sub-folder
+    for cand in (RAW_DIR, RAW_DIR_ALT):
+        if (cand / "Apparel").exists() or (cand / "Electronics").exists() or (cand / "Home").exists():
+            return cand
+    # if neither has class folders, prefer primary if it exists
+    if RAW_DIR.exists() and any(RAW_DIR.iterdir()):
+        return RAW_DIR
+    if RAW_DIR_ALT.exists() and any(RAW_DIR_ALT.iterdir()):
+        return RAW_DIR_ALT
+    return RAW_DIR
+
+
+def resolve_image_path(rel: str | Path) -> Path:
+    """Resolve a manifest-relative image path (e.g. 'Apparel/xxx.jpg') with fallback."""
+    rel = Path(rel)
+    for base in (RAW_DIR, RAW_DIR_ALT):
+        p = base / rel
+        if p.exists():
+            return p
+    return RAW_DIR / rel
 
 # ---------------------------------------------------------------- labels ---
 # The three coarse catalogue domains (Flipkart-style taxonomy).
@@ -68,3 +114,9 @@ IMAGENET_STD = [0.229, 0.224, 0.225]
 
 for _d in (DATA_DIR, RAW_DIR, SPLIT_DIR, MODELS_DIR, REPORTS_DIR):
     _d.mkdir(parents=True, exist_ok=True)
+# also ensure fallback dirs exist when needed (no error if they already exist)
+for _d in (RAW_DIR_ALT, SPLIT_DIR_ALT):
+    try:
+        _d.mkdir(parents=True, exist_ok=True)
+    except Exception:
+        pass
