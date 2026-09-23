@@ -147,3 +147,41 @@ git add index.html && git commit -m "fix: real email, tone down production-grade
 Patches are in `docs/portfolio_index_fix.patch` and `docs/profile_README_fix.patch` in this branch.
 
 **Also update GitHub Settings → Profile → Website (blog):** Currently `linkedin.com/in/...`, consider changing to `https://akash-pathak-scientist.github.io` so your portfolio link is one-click from profile header.
+
+---
+
+## 8. 🌌 Virtual Data Scientist Planet — Immersive Redesign (2026-09-23)
+
+Your request: *\"most most attractive like someone comes in virtuality world like on data scientist planet\"*.
+
+**Done — new immersive index.html built locally** in `/tmp/portfolio/index.html` (commit `ce14389` — `feat: Data Scientist Planet — immersive virtual-world redesign`):
+
+**What changed visually (preview `/tmp/portfolio/index.html` side-by-side with old):**
+
+- **Cosmic background:** Dual `cosmos` canvas (220 twinkling stars + nebula glows + drifting dashed grid) + `planetCanvas` with orbiting data-node dots around the planet — replaces flat 60-particle dots. Pure canvas, ~0.5% CPU, GitHub Pages safe.
+- **Hero — Planet in orbit:** Right side now a real **Data Scientist Planet** — radial-gradient sphere (30% highlight → deep navy), lit rim, blurry continents, two physical rings (`rotate(-18deg)`), inner glow + three dashed `orbit` rings with animated `spin` (28s / 42s-reverse / 60s) and neon dots (SQL 92%, Python, Power BI, PyTorch) with glass labels — feels like entering a virtual solar system.
+- **Navigation — Spaceship HUD:** Floating glass pill nav (`backdrop-filter: blur(24px)`, rounded 999px) with planet logo (sphere + ring), verified sub-title, neon `Hire Me →` gradient — more virtual-HQ than header.
+- **Hero left — Virtual Mission Control:** New `Virt-badge` (`🪐 Data Scientist Planet`) + live green pulse badge + gradient headline + holographic pills (`SQL`, `PyTorch`…) + right-side **Planet Status glass card** (live mini-planet with two orbiting rings + `91.71% test acc` / 7/7 missions / 786k rows stats) — on desktop both panes orbit, on mobile collapses gracefully.
+- **Project cards — Holographic planets:** All 7 `pcard`s now glass (`bg rgba(18,18,36,0.92)`, `blur(16px)`) with 6px neon `pstrip`, floating `01` watermark, hover `perspective(900px) rotateY/X` 3D tilt, glowing radial `::after`, neon `pstatus` dots, `repo-btn`/`dash-btn` gradients — each mission feels like a planet dossier.
+- **Stats bar — Holographic:** Count-up numbers with gradient `sn` (green/red/yellow), mono labels, countUp observer — no longer flat row.
+- **Spotlight / Stack / Diff / Certs:** Same palette (cards now `gap 0 → sup` reveal, `pbar` width animations, hover `translateY(-2px)`) — consistent virtual-world glass.
+- **Interactions:** `mousemove` parallax on planet (±14px), 3D tilt on cards, scroll `bounce` hint, reveal `vis` animations, countUp.
+
+**Tone & truth preserved:** `akashpathak.in@gmail.com`, `Clean, Portfolio-Ready Code`, every `pdesc` keeps `(simulated …)` vs `(real)` disclaimers from 9b92e61, CNN n=3,114 91.71%, all `projects/p0x-*.html` links intact — only visuals changed, no content loss.
+
+**Apply (owner push — bot has no push perm to `github.io`):**
+
+```bash
+# Option A — full immersive file (recommended — one copy):
+git clone https://github.com/akash-pathak-scientist/akash-pathak-scientist.github.io.git
+cp product-image-classifier-cnn/docs/portfolio_index_planet.html akash-pathak-scientist.github.io/index.html
+cd akash-pathak-scientist.github.io
+git add index.html && git commit -m "feat: Data Scientist Planet — immersive virtual-world portfolio" && git push
+
+# Option B — patch:
+cd akash-pathak-scientist.github.io
+git apply ../product-image-classifier-cnn/docs/portfolio_planet_redesign.patch
+git add index.html && git commit -m "feat: Data Scientist Planet — immersive virtual-world portfolio" && git push
+```
+
+Files in this branch: `docs/portfolio_planet_redesign.patch` (from `ce14389`), `docs/portfolio_index_planet.html` (ready-to-publish copy), plus original `docs/portfolio_index_fix.patch` if you only want the 9b92e61 content fixes without the redesign.

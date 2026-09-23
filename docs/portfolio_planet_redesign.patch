@@ -1,0 +1,1430 @@
+From ce1438952c6362729acb9715ad63d36880262813 Mon Sep 17 00:00:00 2001
+From: akash-pathak-scientist
+ <321365498+akash-pathak-scientist@users.noreply.github.com>
+Date: Wed, 23 Sep 2026 05:23:24 +0000
+Subject: [PATCH] =?UTF-8?q?feat:=20Data=20Scientist=20Planet=20=E2=80=94?=
+ =?UTF-8?q?=20immersive=20virtual-world=20redesign=20(space=20planet,=20or?=
+ =?UTF-8?q?biting=20data=20nodes,=20holographic=20glass=20missions,=20cosm?=
+ =?UTF-8?q?os=20canvas,=20parallax)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ index.html | 1108 +++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 657 insertions(+), 451 deletions(-)
+
+diff --git a/index.html b/index.html
+index de2b9c1..65d90dc 100644
+--- a/index.html
++++ b/index.html
+@@ -3,334 +3,547 @@
+ <head>
+ <meta charset="UTF-8"/>
+ <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+-<title>Akash Pathak — Data Analytics Portfolio</title>
++<title>Akash Pathak — Data Scientist Planet 🌌</title>
++<link rel="preconnect" href="https://fonts.googleapis.com">
+ <style>
+-/* ═══════════════ VARS ═══════════════ */
++@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;600;800;900&display=swap');
+ :root{
+-  --bg:#06060c;--s1:#0d0d1a;--card:#121222;--border:#1e1e36;--border2:#2c2c4e;
+-  --accent:#7c6dfa;--green:#00c9a7;--red:#ff6b6b;--yellow:#ffd166;
+-  --blue:#4ecdc4;--orange:#ff9f43;--purple:#a855f7;
+-  --white:#fff;--muted:#60608a;--text:#c0c0e0;
+-  --font:'Segoe UI',system-ui,sans-serif;--r:16px;
++  --bg:#030308;--s1:#0a0a14;--card:rgba(18,18,36,0.82);--border:rgba(124,109,250,0.14);--border2:rgba(124,109,250,0.24);
++  --accent:#7c6dfa;--accent2:#a855f7;--green:#00e6a0;--red:#ff5a6a;--yellow:#ffc857;--blue:#38d9ff;--orange:#ff8c42;--purple:#b86bff;
++  --white:#ffffff;--muted:#7a7aa8;--text:#c8c8f0;--r:20px;
++  --font:'Outfit',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;--space:'Space Grotesk',sans-serif;
+ }
+ *{margin:0;padding:0;box-sizing:border-box;}
+-html{scroll-behavior:smooth;}
++html{scroll-behavior:smooth;scroll-padding-top:70px;}
+ body{background:var(--bg);color:var(--text);font-family:var(--font);overflow-x:hidden;}
+-::-webkit-scrollbar{width:5px;}
+-::-webkit-scrollbar-track{background:var(--s1);}
+-::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px;}
+ 
+-/* ═══════════════ CANVAS ═══════════════ */
+-#cv{position:fixed;inset:0;z-index:0;pointer-events:none;}
++/* ===== COSMIC CANVAS ===== */
++#cosmos{position:fixed;inset:0;z-index:0;pointer-events:none;}
++#planetCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.55;}
+ 
+-/* ═══════════════ NAV ═══════════════ */
++/* ===== NAV - GLASS SPACESHIP HUD ===== */
+ nav{
+-  position:fixed;top:0;left:0;right:0;z-index:200;height:62px;padding:0 2.5rem;
++  position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:200;
++  width:min(1180px,calc(100% - 32px));height:58px;padding:0 18px 0 14px;
+   display:flex;align-items:center;justify-content:space-between;
+-  background:rgba(6,6,12,.92);backdrop-filter:blur(22px);
+-  border-bottom:1px solid rgba(124,109,250,.13);
++  background:rgba(10,10,22,0.72);backdrop-filter:blur(24px) saturate(1.4);
++  border:1px solid rgba(255,255,255,0.07);border-radius:999px;
++  box-shadow:0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+ }
+-.nb{display:flex;align-items:center;gap:.65rem;}
+-.ni{
+-  width:38px;height:38px;border-radius:11px;font-size:18px;
+-  background:linear-gradient(135deg,var(--accent),var(--purple));
+-  display:flex;align-items:center;justify-content:center;
+-  animation:gp 3s ease-in-out infinite;
+-}
+-@keyframes gp{0%,100%{box-shadow:0 0 0 0 rgba(124,109,250,.6)}50%{box-shadow:0 0 0 12px rgba(124,109,250,0)}}
+-.nb-name{font-weight:800;font-size:1rem;color:var(--white);}
+-.nb-name span{color:var(--accent);}
+-.nr{display:flex;align-items:center;gap:1.2rem;}
+-.na{color:var(--muted);font-size:.82rem;font-weight:500;padding:.35rem .72rem;border-radius:8px;transition:all .2s;text-decoration:none;}
+-.na:hover{color:var(--accent);background:rgba(124,109,250,.08);}
++.nb{display:flex;align-items:center;gap:12px;}
++.planet-logo{
++  width:42px;height:42px;border-radius:50%;
++  background:radial-gradient(circle at 30% 30%, #fff 0%, #a5b4fc 12%, #7c6dfa 28%, #4f46e5 52%, #1e1b4b 78%);
++  box-shadow:0 0 0 1px rgba(124,109,250,0.5), 0 0 20px rgba(124,109,250,0.6), inset -6px -4px 12px rgba(0,0,0,0.5);
++  display:flex;align-items:center;justify-content:center;font-size:18px;position:relative;overflow:hidden;
++}
++.planet-logo::before{
++  content:'';position:absolute;inset:3px;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,0.18),transparent 55%);pointer-events:none;
++}
++.planet-logo::after{
++  content:'';position:absolute;left:50%;top:50%;width:56px;height:10px;border:2px solid rgba(255,255,255,0.32);border-radius:50%;transform:translate(-50%,-50%) rotate(-18deg);box-shadow:0 0 8px rgba(124,109,250,0.4);
++}
++.nb-name{font-family:var(--space);font-weight:800;font-size:1.02rem;letter-spacing:-0.3px;color:var(--white);}
++.nb-name span{background:linear-gradient(90deg,var(--accent),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
++.nb-sub{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-top:1px;}
++.nr{display:flex;align-items:center;gap:8px;}
++.na{color:var(--muted);font-size:0.78rem;font-weight:600;padding:8px 14px;border-radius:999px;transition:all .2s;text-decoration:none;font-family:var(--space);}
++.na:hover{color:var(--white);background:rgba(255,255,255,0.06);}
+ .nhire{
+-  background:linear-gradient(135deg,var(--accent),var(--purple));
+-  color:var(--white);padding:.38rem 1.1rem;border-radius:20px;
+-  font-size:.8rem;font-weight:700;text-decoration:none;
+-  box-shadow:0 4px 15px rgba(124,109,250,.4);transition:transform .2s,box-shadow .2s;
++  background:linear-gradient(135deg,#7c6dfa 0%,#a855f7 55%,#38d9ff 100%);color:var(--white);
++  padding:9px 18px;border-radius:999px;font-size:0.8rem;font-weight:800;letter-spacing:0.3px;
++  text-decoration:none;box-shadow:0 4px 18px rgba(124,109,250,0.45), 0 0 0 1px rgba(255,255,255,0.08) inset;
++  transition:transform .2s,box-shadow .2s;white-space:nowrap;
+ }
+-.nhire:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(124,109,250,.55);}
++.nhire:hover{transform:translateY(-1px) scale(1.02);box-shadow:0 8px 28px rgba(124,109,250,0.6);}
+ 
+-/* ═══════════════ HERO ═══════════════ */
++/* ===== HERO - DATA SCIENTIST PLANET ===== */
+ .hero{
+   position:relative;z-index:1;min-height:100vh;
+-  display:flex;flex-direction:column;align-items:center;justify-content:center;
+-  text-align:center;padding:7rem 2rem 4rem;
++  display:flex;align-items:center;justify-content:center;
++  padding:110px 24px 40px;overflow:hidden;
++  background:
++    radial-gradient(ellipse 900px 600px at 70% 15%, rgba(124,109,250,0.18) 0%, transparent 60%),
++    radial-gradient(ellipse 700px 500px at 10% 85%, rgba(56,217,255,0.10) 0%, transparent 60%),
++    radial-gradient(ellipse 600px 400px at 90% 85%, rgba(232,121,249,0.10) 0%, transparent 60%);
++}
++/* Planet visual */
++.planet-wrap{position:absolute;right:4%;top:52%;transform:translateY(-50%);width:min(560px,44vw);height:min(560px,44vw);pointer-events:none;z-index:0;}
++@media(max-width:1100px){.planet-wrap{opacity:0.32;right:-8%;top:48%;width:520px;height:520px;}}
++@media(max-width:760px){.planet-wrap{display:none;}}
++.planet{
++  position:absolute;inset:0;border-radius:50%;
+   background:
+-    radial-gradient(ellipse at 20% 50%,rgba(124,109,250,.13) 0%,transparent 55%),
+-    radial-gradient(ellipse at 80% 35%,rgba(168,85,247,.09) 0%,transparent 55%),
+-    radial-gradient(ellipse at 50% 85%,rgba(0,201,167,.07) 0%,transparent 55%);
++    radial-gradient(circle at 32% 28%, #ffffff 0%, #e0e7ff 6%, #a5b4fc 14%, #7c6dfa 26%, #5b4bd5 38%, #312e81 62%, #0f0f2a 78%, #020208 100%);
++  box-shadow:
++    inset -40px -30px 60px rgba(0,0,0,0.75),
++    inset 20px 10px 40px rgba(255,255,255,0.14),
++    0 0 0 1px rgba(124,109,250,0.35),
++    0 0 80px rgba(124,109,250,0.45),
++    0 0 160px rgba(124,109,250,0.18);
++  overflow:hidden;
++}
++.planet::before{
++  content:'';position:absolute;inset:0;border-radius:50%;
++  background:
++    radial-gradient(ellipse 180px 90px at 68% 62%, rgba(255,255,255,0.10) 0%, transparent 60%),
++    radial-gradient(ellipse 120px 70px at 28% 42%, rgba(56,217,255,0.08) 0%, transparent 60%);
++  mix-blend-mode:overlay;
++}
++/* continents - subtle data continents */
++.planet::after{
++  content:'';position:absolute;inset:0;border-radius:50%;opacity:0.32;
++  background:
++    radial-gradient(ellipse 90px 55px at 36% 48%, #020208 0%, transparent 70%),
++    radial-gradient(ellipse 70px 40px at 58% 38%, #020208 0%, transparent 70%),
++    radial-gradient(ellipse 110px 68px at 48% 68%, #020208 0%, transparent 70%);
++  filter:blur(1px);
++}
++.planet-ring{
++  position:absolute;left:50%;top:50%;width:146%;height:26%;border:2px solid rgba(255,255,255,0.16);
++  border-radius:50%;transform:translate(-50%,-50%) rotate(-18deg);
++  box-shadow:0 0 20px rgba(124,109,250,0.25), inset 0 0 12px rgba(255,255,255,0.08);
++  background:linear-gradient(90deg,transparent 0%, rgba(255,255,255,0.06) 20%, rgba(124,109,250,0.18) 50%, rgba(255,255,255,0.06) 80%, transparent 100%);
++}
++.planet-ring.r2{width:162%;height:32%;opacity:0.42;border-color:rgba(56,217,255,0.14);transform:translate(-50%,-50%) rotate(-18deg) scale(1.02);}
++.planet-glow{
++  position:absolute;inset:-22%;border-radius:50%;
++  background:radial-gradient(circle, transparent 62%, rgba(124,109,250,0.14) 72%, transparent 78%);
++  filter:blur(8px);
+ }
++/* orbiting data nodes */
++.orbit{position:absolute;left:50%;top:50%;border:1px dashed rgba(124,109,250,0.16);border-radius:50%;transform:translate(-50%,-50%);}
++.orbit.o1{width:118%;height:118%;animation:spin 28s linear infinite;}
++.orbit.o2{width:136%;height:136%;animation:spin 42s linear infinite reverse;border-color:rgba(56,217,255,0.11);}
++.orbit.o3{width:156%;height:156%;animation:spin 60s linear infinite;border-color:rgba(232,121,249,0.09);}
++@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg);}}
++.dot{
++  position:absolute;width:9px;height:9px;border-radius:50%;top:-4.5px;left:50%;transform:translateX(-50%);
++  background:var(--accent);box-shadow:0 0 10px var(--accent), 0 0 18px var(--accent);
++  border:1px solid rgba(255,255,255,0.8);
++}
++.dot.d2{background:var(--blue);box-shadow:0 0 10px var(--blue);left:82%;top:14%;}
++.dot.d3{background:var(--green);box-shadow:0 0 10px var(--green);left:18%;top:78%;}
++.dot.d4{background:var(--yellow);box-shadow:0 0 10px var(--yellow);left:92%;top:62%;}
++.dot-label{
++  position:absolute;left:14px;top:50%;transform:translateY(-50%);
++  background:rgba(10,10,22,0.92);border:1px solid rgba(255,255,255,0.09);backdrop-filter:blur(10px);
++  padding:4px 8px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:0.6px;color:var(--white);
++  white-space:nowrap;font-family:var(--mono);box-shadow:0 4px 14px rgba(0,0,0,0.4);
++}
++
++.hero-inner{position:relative;z-index:1;max-width:1180px;width:100%;display:grid;grid-template-columns:1.05fr 0.92fr;gap:28px;align-items:center;}
++@media(max-width:900px){.hero-inner{grid-template-columns:1fr;gap:18px;}}
++.hero-left{text-align:left;}
++@media(max-width:900px){.hero-left{text-align:center;}}
+ .hbadge{
+-  display:inline-flex;align-items:center;gap:.5rem;
+-  background:rgba(0,201,167,.08);border:1px solid rgba(0,201,167,.3);
+-  color:var(--green);padding:.3rem 1rem;border-radius:20px;
+-  font-size:.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+-  margin-bottom:1.6rem;animation:fdn .6s ease both;
+-}
+-.bdot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite;}
+-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
++  display:inline-flex;align-items:center;gap:10px;
++  background:rgba(0,230,160,0.08);border:1px solid rgba(0,230,160,0.22);
++  color:var(--green);padding:7px 14px 7px 8px;border-radius:999px;
++  font-size:11px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;
++  backdrop-filter:blur(12px);box-shadow:0 4px 18px rgba(0,230,160,0.12);
++  animation:fdn .7s ease both;
++}
++.bdot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 1.4s infinite;flex-shrink:0;}
++.live-dot{width:36px;height:36px;border-radius:50%;background:rgba(0,230,160,0.12);display:flex;align-items:center;justify-content:center;}
++@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(0.85)}}
+ @keyframes fdn{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:translateY(0)}}
+ @keyframes fup{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+ .hero h1{
+-  font-size:clamp(2.8rem,7vw,5rem);font-weight:900;
+-  letter-spacing:-2px;line-height:1.05;margin-bottom:.5rem;
+-  animation:fup .7s .1s ease both;
++  font-family:var(--space);font-size:clamp(2.6rem,5.2vw,4.4rem);font-weight:900;
++  letter-spacing:-2.2px;line-height:0.96;margin:14px 0 10px;
++  animation:fup .7s .08s ease both;
+ }
++.hg-line{display:block;}
+ .hg{
+-  background:linear-gradient(135deg,var(--white) 20%,var(--accent) 60%,var(--purple) 100%);
++  background:linear-gradient(100deg,#fff 12%,#a5b4fc 32%,#7c6dfa 58%,#38d9ff 82%,#a855f7 100%);
+   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
++  filter:drop-shadow(0 0 22px rgba(124,109,250,0.28));
+ }
+ .hrole{
+-  font-size:clamp(1.3rem,3vw,2rem);font-weight:700;
+-  background:linear-gradient(135deg,var(--green),var(--blue));
++  font-family:var(--space);font-size:clamp(1.05rem,2.2vw,1.55rem);font-weight:700;
++  letter-spacing:-0.6px;
++  background:linear-gradient(90deg,var(--green),var(--blue) 55%, #fff);
+   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+-  margin-bottom:1.2rem;animation:fup .7s .2s ease both;
++  margin-bottom:14px;animation:fup .7s .16s ease both;
+ }
++.hrole span{font-weight:300;opacity:0.9;}
+ .hsub{
+-  max-width:620px;color:var(--muted);font-size:1rem;line-height:1.75;
+-  margin:0 auto 2.5rem;animation:fup .7s .3s ease both;
+-}
+-.hsub strong{color:var(--text);}
+-/* pill strip */
+-.pills{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2.5rem;animation:fup .7s .4s ease both;}
+-.pill{padding:.3rem .82rem;border-radius:20px;font-size:.75rem;font-weight:600;border:1px solid;cursor:default;transition:transform .2s;}
+-.pill:hover{transform:translateY(-2px);}
+-.pa{background:rgba(124,109,250,.1);border-color:rgba(124,109,250,.35);color:var(--accent);}
+-.pg{background:rgba(0,201,167,.1);border-color:rgba(0,201,167,.35);color:var(--green);}
+-.pr{background:rgba(255,107,107,.1);border-color:rgba(255,107,107,.35);color:var(--red);}
+-.py{background:rgba(255,209,102,.1);border-color:rgba(255,209,102,.35);color:var(--yellow);}
+-.pb{background:rgba(78,205,196,.1);border-color:rgba(78,205,196,.35);color:var(--blue);}
+-.po{background:rgba(255,159,67,.1);border-color:rgba(255,159,67,.35);color:var(--orange);}
+-.pp{background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.35);color:var(--purple);}
++  max-width:560px;color:#9aa0c8;font-size:15px;line-height:1.78;
++  margin:0 0 22px;animation:fup .7s .24s ease both;font-weight:400;
++}
++@media(max-width:900px){.hsub{margin:0 auto 22px;}}
++.hsub strong{color:#e6e6ff;font-weight:700;}
++.hsub em{font-style:normal;color:var(--yellow);font-weight:700;}
++
++/* virtual world badge */
++.virt-badge{
++  display:inline-flex;align-items:center;gap:8px;margin-bottom:14px;
++  background:linear-gradient(180deg,rgba(124,109,250,0.14),rgba(124,109,250,0.06));
++  border:1px solid rgba(124,109,250,0.22);padding:6px 12px;border-radius:999px;
++  font-family:var(--mono);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#a5b4fc;font-weight:700;
++}
++.virt-badge b{color:var(--white);}
++
++/* pills */
++.pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;animation:fup .7s .32s ease both;}
++@media(max-width:900px){.pills{justify-content:center;}}
++.pill{
++  padding:7px 11px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:0.4px;
++  border:1px solid;backdrop-filter:blur(10px);cursor:default;transition:transform .18s, box-shadow .18s;
++  display:inline-flex;align-items:center;gap:6px;
++}
++.pill:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 6px 18px rgba(0,0,0,0.28);}
++.pa{background:rgba(124,109,250,0.10);border-color:rgba(124,109,250,0.28);color:#a5b4fc;}
++.pg{background:rgba(0,230,160,0.08);border-color:rgba(0,230,160,0.22);color:var(--green);}
++.pr{background:rgba(255,90,106,0.08);border-color:rgba(255,90,106,0.22);color:var(--red);}
++.py{background:rgba(255,200,87,0.08);border-color:rgba(255,200,87,0.22);color:var(--yellow);}
++.pb{background:rgba(56,217,255,0.08);border-color:rgba(56,217,255,0.22);color:var(--blue);}
++.po{background:rgba(255,140,66,0.08);border-color:rgba(255,140,66,0.22);color:var(--orange);}
++
+ /* ctas */
+-.ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;animation:fup .7s .5s ease both;}
++.ctas{display:flex;gap:12px;flex-wrap:wrap;animation:fup .7s .40s ease both;}
++@media(max-width:900px){.ctas{justify-content:center;}}
+ .btnp{
+-  background:linear-gradient(135deg,var(--accent),var(--purple));color:var(--white);
+-  padding:.65rem 1.8rem;border-radius:25px;font-size:.9rem;font-weight:700;
+-  text-decoration:none;box-shadow:0 6px 20px rgba(124,109,250,.4);
+-  transition:transform .2s,box-shadow .2s;
++  background:linear-gradient(135deg,#7c6dfa 0%,#a855f7 48%,#38d9ff 100%);color:var(--white);
++  padding:13px 22px;border-radius:999px;font-size:14px;font-weight:800;letter-spacing:0.2px;
++  text-decoration:none;box-shadow:0 8px 26px rgba(124,109,250,0.42), 0 0 0 1px rgba(255,255,255,0.08) inset;
++  transition:transform .18s,box-shadow .18s;display:inline-flex;align-items:center;gap:8px;
+ }
+-.btnp:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(124,109,250,.55);}
++.btnp:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(124,109,250,0.55);}
+ .btno{
+-  background:transparent;color:var(--text);border:1px solid var(--border2);
+-  padding:.65rem 1.8rem;border-radius:25px;font-size:.9rem;font-weight:600;
+-  text-decoration:none;transition:all .2s;
++  background:rgba(255,255,255,0.04);color:var(--white);border:1px solid rgba(255,255,255,0.10);
++  padding:13px 20px;border-radius:999px;font-size:13.5px;font-weight:700;
++  text-decoration:none;backdrop-filter:blur(12px);transition:all .18s;display:inline-flex;align-items:center;gap:8px;
++}
++.btno:hover{background:rgba(255,255,255,0.08);border-color:rgba(124,109,250,0.32);transform:translateY(-1px);}
++.btn-ghost{font-size:11px;letter-spacing:0.8px;text-transform:uppercase;opacity:0.9;}
++
++/* mini planet card in hero right (on mobile, shows below) */
++.hero-planet-card{
++  background:linear-gradient(180deg,rgba(18,18,36,0.88) 0%, rgba(10,10,22,0.92) 100%);
++  border:1px solid rgba(255,255,255,0.07);border-radius:22px;overflow:hidden;
++  backdrop-filter:blur(18px);box-shadow:0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,109,250,0.08) inset;
++  animation:fup .7s .48s ease both;
++}
++.hero-planet-card-head{
++  padding:14px 16px 12px;display:flex;align-items:center;justify-content:space-between;
++  border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(124,109,250,0.04);
++}
++.hero-planet-card-head b{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#a5b4fc;font-weight:800;display:flex;align-items:center;gap:7px;}
++.hero-planet-card-head b::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);display:inline-block;}
++.hero-planet-card-head span{font-family:var(--mono);font-size:10px;color:var(--muted);background:rgba(255,255,255,0.06);padding:4px 8px;border-radius:999px;}
++.hero-planet-preview{
++  height:172px;position:relative;overflow:hidden;
++  background:
++    radial-gradient(ellipse 420px 220px at 50% 0%, rgba(124,109,250,0.22) 0%, transparent 60%),
++    radial-gradient(ellipse 520px 280px at 50% 100%, rgba(56,217,255,0.14) 0%, transparent 60%),
++    linear-gradient(180deg,#0a0a14 0%, #06060c 100%);
++  display:flex;align-items:center;justify-content:center;
++}
++.mini-planet{
++  width:112px;height:112px;border-radius:50%;
++  background:radial-gradient(circle at 30% 28%, #fff 0%, #a5b4fc 15%, #7c6dfa 32%, #312e81 62%, #020208 100%);
++  box-shadow:0 0 0 1px rgba(124,109,250,0.4), 0 0 28px rgba(124,109,250,0.5), inset -14px -8px 18px rgba(0,0,0,0.6);
++  position:relative;
+ }
+-.btno:hover{border-color:var(--accent);color:var(--accent);}
++.mini-planet::after{
++  content:'';position:absolute;left:50%;top:50%;width:148%;height:22%;border:1px solid rgba(255,255,255,0.18);border-radius:50%;transform:translate(-50%,-50%) rotate(-16deg);
++}
++.mini-orbit{position:absolute;inset:0;border-radius:50%;border:1px dashed rgba(124,109,250,0.18);animation:spin 18s linear infinite;}
++.mini-dot{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);top:-3px;left:50%;}
++.hero-planet-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:14px;}
++.hps{ text-align:center; background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:10px 6px;}
++.hps b{font-family:var(--space);font-size:14px;font-weight:900;color:var(--white);display:block;}
++.hps span{font-family:var(--mono);font-size:9px;letter-spacing:0.8px;text-transform:uppercase;color:var(--muted);margin-top:2px;display:block;}
++
+ /* scroll hint */
+-.sc{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;color:var(--muted);font-size:.72rem;animation:fup .7s .7s ease both;}
+-.sr{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;animation:bounce 2s infinite;}
+-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
++.sc{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;font-family:var(--mono);animation:fup .7s .7s ease both;}
++.sr{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,0.10);background:rgba(255,255,255,0.04);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;animation:bounce 2s infinite;}
++@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+ 
+-/* ═══════════════ STATS BAR ═══════════════ */
++/* ===== STATS BAR - HOLOGRAPHIC ===== */
+ .sbar{
+   position:relative;z-index:1;
+-  background:var(--s1);border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+-  padding:1.6rem 2rem;display:flex;justify-content:center;gap:4rem;flex-wrap:wrap;
++  background:rgba(10,10,22,0.72);backdrop-filter:blur(18px);
++  border-top:1px solid rgba(124,109,250,0.10);border-bottom:1px solid rgba(124,109,250,0.10);
++  padding:18px 16px;display:flex;justify-content:center;gap:36px;flex-wrap:wrap;
+ }
+-.si{text-align:center;}
++.si{text-align:center;min-width:110px;}
+ .sn{
+-  font-size:2rem;font-weight:900;display:block;line-height:1;
+-  background:linear-gradient(135deg,var(--white),var(--accent));
+-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
++  font-family:var(--space);font-size:1.7rem;font-weight:900;letter-spacing:-1px;line-height:1;
++  background:linear-gradient(180deg,#fff 0%,#a5b4fc 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
++  display:block;
+ }
+-.sn.g{background:linear-gradient(135deg,var(--green),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+-.sn.r{background:linear-gradient(135deg,var(--red),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+-.sn.y{background:linear-gradient(135deg,var(--yellow),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+-.sl{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-top:.35rem;}
+-
+-/* ═══════════════ MAIN ═══════════════ */
+-.wrap{position:relative;z-index:1;max-width:1300px;margin:0 auto;padding:0 2rem 6rem;}
+-.sh{display:flex;align-items:center;gap:.8rem;margin:4.5rem 0 2rem;}
+-.sh h2{font-size:1.3rem;font-weight:800;color:var(--white);white-space:nowrap;}
+-.shb{padding:.2rem .7rem;border-radius:20px;font-size:.68rem;font-weight:700;background:rgba(124,109,250,.1);border:1px solid rgba(124,109,250,.3);color:var(--accent);}
+-.shl{flex:1;height:1px;background:linear-gradient(90deg,var(--border2),transparent);}
+-
+-/* ═══════════════ PROJECT CARDS ═══════════════ */
+-.pgrid{display:grid;gap:1.5rem;}
++.sn.g{background:linear-gradient(180deg,var(--green) 0%,#7af0c8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
++.sn.r{background:linear-gradient(180deg,#ff8a8a 0%,#ff5a6a 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
++.sn.y{background:linear-gradient(180deg,#ffda8a 0%,#ffc857 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
++.sl{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:6px;}
++
++/* ===== MAIN WRAP ===== */
++.wrap{position:relative;z-index:1;max-width:1220px;margin:0 auto;padding:0 20px 60px;}
++.sh{display:flex;align-items:center;gap:10px;margin:54px 0 22px;}
++.sh h2{font-family:var(--space);font-size:1.15rem;font-weight:800;letter-spacing:-0.5px;color:var(--white);white-space:nowrap;}
++.shb{padding:5px 10px;border-radius:999px;font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:0.6px;background:rgba(124,109,250,0.10);border:1px solid rgba(124,109,250,0.22);color:#a5b4fc;}
++.shl{flex:1;height:1px;background:linear-gradient(90deg,rgba(124,109,250,0.22),transparent);}
++
++/* ===== PROJECTS - HOLOGRAPHIC PLANET CARDS ===== */
++.pgrid{display:grid;gap:18px;}
+ .pcard{
+-  background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+-  padding:0;overflow:hidden;position:relative;
+-  transition:transform .3s,box-shadow .3s,border-color .3s;
+-  opacity:0;transform:translateY(28px);display:grid;
+-  grid-template-columns:5px 1fr auto;
+-}
+-.pcard.vis{animation:sup .55s ease forwards;}
+-@keyframes sup{to{opacity:1;transform:translateY(0)}}
+-.pcard:hover{transform:translateY(-4px);box-shadow:0 24px 56px rgba(0,0,0,.5);}
+-.pcard:hover{border-color:rgba(124,109,250,.3);}
+-/* accent strip */
+-.pstrip{width:5px;flex-shrink:0;}
+-/* body */
+-.pbody{padding:1.8rem 2rem 1.8rem 1.8rem;}
+-/* glow bg */
++  background:linear-gradient(180deg,rgba(18,18,36,0.92) 0%, rgba(12,12,24,0.96) 100%);
++  border:1px solid rgba(255,255,255,0.06);border-radius:20px;
++  overflow:hidden;position:relative;
++  backdrop-filter:blur(16px);
++  box-shadow:0 12px 40px rgba(0,0,0,0.45), 0 0 0 1px rgba(124,109,250,0.06) inset;
++  display:grid;grid-template-columns:6px 1fr 176px;
++  opacity:0;transform:translateY(22px) scale(0.98);
++  transition:transform .32s, box-shadow .32s, border-color .32s;
++}
++.pcard.vis{animation:sup .6s ease forwards;}
++@keyframes sup{to{opacity:1;transform:translateY(0) scale(1);}}
++.pcard:hover{transform:translateY(-4px) scale(1.005);box-shadow:0 20px 60px rgba(0,0,0,0.6), 0 0 30px rgba(124,109,250,0.14);border-color:rgba(124,109,250,0.18);}
++.pstrip{width:6px;}
++.pbody{padding:20px 18px 18px 18px;position:relative;}
+ .pcard::after{
+-  content:'';position:absolute;top:-50px;right:-50px;
+-  width:180px;height:180px;border-radius:50%;
+-  background:radial-gradient(circle,var(--pc,var(--accent)) 0%,transparent 70%);
+-  opacity:.04;transition:opacity .3s;pointer-events:none;
+-}
+-.pcard:hover::after{opacity:.1;}
+-.pcard-num{font-size:3.5rem;font-weight:900;color:rgba(255,255,255,.04);position:absolute;right:1.8rem;top:1.2rem;line-height:1;}
+-.phead{display:flex;align-items:flex-start;gap:.9rem;margin-bottom:.8rem;}
+-.picon{width:44px;height:44px;border-radius:11px;flex-shrink:0;background:rgba(255,255,255,.05);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:20px;}
+-.ptitle{font-size:1.1rem;font-weight:800;color:var(--white);margin-bottom:.2rem;}
+-.pdomain{font-size:.74rem;color:var(--muted);}
+-.pdesc{font-size:.88rem;color:var(--muted);line-height:1.65;margin-bottom:1.1rem;}
+-.presults{list-style:none;margin-bottom:1.2rem;display:flex;flex-direction:column;gap:.35rem;}
+-.presults li{font-size:.82rem;color:var(--text);padding:.28rem .6rem;background:rgba(255,255,255,.025);border-radius:6px;border-left:2px solid var(--pc,var(--accent));}
+-.ptags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.3rem;}
+-.ptag{padding:.18rem .6rem;border-radius:6px;font-size:.7rem;font-weight:600;background:rgba(124,109,250,.08);border:1px solid rgba(124,109,250,.2);color:var(--accent);}
+-/* right col */
++  content:'';position:absolute;top:-40px;right:40px;width:220px;height:220px;border-radius:50%;
++  background:radial-gradient(circle, var(--pc, var(--accent)) 0%, transparent 68%);
++  opacity:0.06;pointer-events:none;transition:opacity .3s;
++}
++.pcard:hover::after{opacity:0.11;}
++.pcard-num{position:absolute;right:14px;top:10px;font-family:var(--space);font-size:3.2rem;font-weight:900;color:rgba(255,255,255,0.035);line-height:1;pointer-events:none;}
++.phead{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;}
++.picon{
++  width:46px;height:46px;border-radius:14px;flex-shrink:0;
++  background:linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));
++  border:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:center;font-size:21px;
++  box-shadow:0 4px 14px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
++}
++.ptitle{font-family:var(--space);font-size:1.06rem;font-weight:800;letter-spacing:-0.3px;color:var(--white);margin-bottom:3px;}
++.pdomain{font-family:var(--mono);font-size:10px;letter-spacing:0.7px;text-transform:uppercase;color:var(--muted);font-weight:700;}
++.pdesc{font-size:13.5px;color:#9aa0c8;line-height:1.65;margin-bottom:12px;}
++.pdesc strong{color:#d8d8ff;}
++.presults{list-style:none;margin-bottom:14px;display:flex;flex-direction:column;gap:6px;}
++.presults li{
++  font-size:12.5px;color:#c8c8f0;padding:7px 10px;
++  background:linear-gradient(180deg,rgba(255,255,255,0.03), rgba(255,255,255,0.01));
++  border:1px solid rgba(255,255,255,0.04);border-left:2px solid var(--pc, var(--accent));
++  border-radius:10px;display:flex;align-items:center;gap:8px;
++}
++.ptags{display:flex;flex-wrap:wrap;gap:6px;}
++.ptag{
++  padding:5px 9px;border-radius:999px;font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:0.4px;
++  background:rgba(124,109,250,0.08);border:1px solid rgba(124,109,250,0.16);color:#a5b4fc;
++}
+ .pright{
+-  display:flex;flex-direction:column;align-items:flex-end;
+-  justify-content:space-between;padding:1.8rem 1.8rem 1.8rem 0;
+-  gap:1rem;min-width:160px;
+-}
+-.pstatus{padding:.3rem .9rem;border-radius:20px;font-size:.72rem;font-weight:700;white-space:nowrap;}
+-.sdone{background:rgba(0,201,167,.12);color:var(--green);border:1px solid rgba(0,201,167,.35);}
+-.plinks{display:flex;flex-direction:column;gap:.6rem;align-items:flex-end;}
+-.repo-btn{
+-  display:inline-flex;align-items:center;gap:.4rem;
+-  background:rgba(124,109,250,.1);border:1px solid rgba(124,109,250,.3);
+-  color:var(--accent);padding:.4rem .9rem;border-radius:8px;
+-  font-size:.75rem;font-weight:700;text-decoration:none;
+-  transition:all .2s;white-space:nowrap;
+-}
+-.repo-btn:hover{background:var(--accent);color:var(--white);border-color:var(--accent);}
+-.dash-btn{
+-  display:inline-flex;align-items:center;gap:.4rem;
+-  background:rgba(0,201,167,.1);border:1px solid rgba(0,201,167,.3);
+-  color:var(--green);padding:.4rem .9rem;border-radius:8px;
+-  font-size:.75rem;font-weight:700;text-decoration:none;
+-  transition:all .2s;white-space:nowrap;
+-}
+-.dash-btn:hover{background:var(--green);color:var(--bg);border-color:var(--green);}
+-
+-/* ═══════════════ STACK ═══════════════ */
+-.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem;}
+-.sc2{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.4rem;transition:border-color .2s,transform .2s;opacity:0;transform:translateY(20px);}
++  display:flex;flex-direction:column;align-items:stretch;justify-content:space-between;
++  padding:16px 16px 16px 0;gap:12px;min-width:176px;
++  border-left:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.015);
++}
++.pstatus{
++  align-self:flex-end;padding:6px 10px;border-radius:999px;
++  font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:0.7px;
++  background:rgba(0,230,160,0.10);color:var(--green);border:1px solid rgba(0,230,160,0.22);
++  display:inline-flex;align-items:center;gap:6px;
++}
++.pstatus::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);}
++.plinks{display:flex;flex-direction:column;gap:8px;}
++.repo-btn,.dash-btn{
++  display:flex;align-items:center;justify-content:center;gap:7px;
++  padding:9px 12px;border-radius:12px;
++  font-size:12px;font-weight:800;text-decoration:none;transition:all .18s;
++}
++.repo-btn{background:rgba(124,109,250,0.10);border:1px solid rgba(124,109,250,0.22);color:#a5b4fc;}
++.repo-btn:hover{background:#7c6dfa;color:#fff;border-color:#7c6dfa;transform:translateY(-1px);}
++.dash-btn{background:rgba(0,230,160,0.08);border:1px solid rgba(0,230,160,0.22);color:var(--green);}
++.dash-btn:hover{background:var(--green);color:#020208;border-color:var(--green);transform:translateY(-1px);}
++
++/* ===== STACK / DIFF / CERTS ===== */
++.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;}
++.sc2{
++  background:linear-gradient(180deg,rgba(18,18,36,0.86), rgba(12,12,24,0.92));
++  border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:16px;
++  backdrop-filter:blur(12px);transition:transform .2s, border-color .2s, box-shadow .2s;
++  opacity:0;transform:translateY(16px);
++}
+ .sc2.vis{animation:sup .5s ease forwards;}
+-.sc2:hover{border-color:var(--accent);transform:translateY(-3px);}
+-.sc2-label{font-size:.65rem;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:.7rem;display:flex;align-items:center;gap:.4rem;}
+-.sc2-label::before{content:'';width:12px;height:2px;background:var(--accent);border-radius:1px;}
+-.sc2-items{display:flex;flex-direction:column;gap:.5rem;}
+-.sc2-row{display:flex;align-items:center;justify-content:space-between;font-size:.83rem;color:var(--text);}
+-.pbar{height:3px;background:var(--border2);border-radius:2px;margin-top:.18rem;overflow:hidden;}
+-.pb2{height:100%;border-radius:2px;width:0;transition:width 1.2s ease;}
+-
+-/* ═══════════════ DIFF ═══════════════ */
+-.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+-.dc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.3rem 1.5rem;display:flex;align-items:flex-start;gap:.9rem;transition:border-color .2s,transform .2s;opacity:0;transform:translateY(20px);}
++.sc2:hover{border-color:rgba(124,109,250,0.18);transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,0,0,0.3);}
++.sc2-label{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#a5b4fc;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
++.sc2-label::before{content:'';width:10px;height:2px;background:var(--accent);border-radius:1px;}
++.sc2-row{display:flex;align-items:center;justify-content:space-between;font-size:13px;color:#d8d8ff;font-weight:500;}
++.pbar{height:4px;background:rgba(255,255,255,0.06);border-radius:999px;margin-top:7px;overflow:hidden;}
++.pb2{height:100%;border-radius:999px;width:0;transition:width 1.1s cubic-bezier(.16,1,.3,1);}
++.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
++.dc{
++  background:linear-gradient(180deg,rgba(18,18,36,0.86), rgba(12,12,24,0.92));
++  border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:16px;display:flex;gap:12px;
++  backdrop-filter:blur(12px);transition:transform .2s, border-color .2s;opacity:0;transform:translateY(16px);
++}
+ .dc.vis{animation:sup .5s ease forwards;}
+-.dc:hover{border-color:var(--green);transform:translateY(-2px);}
+-.dc-icon{width:38px;height:38px;border-radius:10px;flex-shrink:0;background:rgba(0,201,167,.08);border:1px solid rgba(0,201,167,.18);display:flex;align-items:center;justify-content:center;font-size:16px;}
+-.dc-title{font-size:.88rem;font-weight:700;color:var(--white);margin-bottom:.28rem;}
+-.dc-sub{font-size:.8rem;color:var(--muted);line-height:1.55;}
+-
+-/* ═══════════════ CERTS ═══════════════ */
+-.ccgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;}
+-.cert{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1.4rem;display:flex;align-items:center;gap:1rem;transition:border-color .2s,transform .2s;opacity:0;transform:translateY(20px);}
++.dc:hover{border-color:rgba(0,230,160,0.18);transform:translateY(-2px);}
++.dc-icon{width:40px;height:40px;border-radius:12px;flex-shrink:0;background:rgba(0,230,160,0.08);border:1px solid rgba(0,230,160,0.14);display:flex;align-items:center;justify-content:center;font-size:17px;}
++.dc-title{font-family:var(--space);font-size:13.5px;font-weight:800;color:var(--white);margin-bottom:4px;}
++.dc-sub{font-size:12.5px;color:var(--muted);line-height:1.6;}
++.ccgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;}
++.cert{
++  background:linear-gradient(180deg,rgba(18,18,36,0.86), rgba(12,12,24,0.92));
++  border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px;
++  backdrop-filter:blur(12px);transition:transform .2s, border-color .2s;opacity:0;transform:translateY(16px);
++}
+ .cert.vis{animation:sup .5s ease forwards;}
+-.cert:hover{border-color:var(--yellow);transform:translateY(-2px);}
+-.clogo{width:42px;height:42px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.2);}
+-.ctitle{font-size:.84rem;font-weight:700;color:var(--white);margin-bottom:.18rem;}
+-.cissuer{font-size:.72rem;color:var(--muted);}
+-.cbadge{margin-left:auto;padding:.15rem .5rem;border-radius:6px;font-size:.65rem;font-weight:700;background:rgba(0,201,167,.1);color:var(--green);border:1px solid rgba(0,201,167,.2);white-space:nowrap;}
++.cert:hover{border-color:rgba(255,200,87,0.18);transform:translateY(-2px);}
++.clogo{width:42px;height:42px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:19px;background:rgba(255,200,87,0.08);border:1px solid rgba(255,200,87,0.16);}
++.ctitle{font-family:var(--space);font-size:13px;font-weight:800;color:var(--white);margin-bottom:2px;}
++.cissuer{font-family:var(--mono);font-size:10px;letter-spacing:0.6px;color:var(--muted);text-transform:uppercase;font-weight:700;}
++.cbadge{margin-left:auto;padding:5px 8px;border-radius:999px;font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:0.6px;background:rgba(0,230,160,0.10);color:var(--green);border:1px solid rgba(0,230,160,0.18);white-space:nowrap;}
+ 
+-/* ═══════════════ CTA CARD ═══════════════ */
++/* CTA */
+ .ctacard{
+-  background:linear-gradient(135deg,rgba(124,109,250,.1),rgba(168,85,247,.06));
+-  border:1px solid rgba(124,109,250,.25);border-radius:var(--r);
+-  padding:3rem 2rem;text-align:center;margin-top:4rem;position:relative;overflow:hidden;
++  background:
++    radial-gradient(ellipse 600px 300px at 50% 0%, rgba(124,109,250,0.14) 0%, transparent 60%),
++    linear-gradient(180deg,rgba(18,18,36,0.92), rgba(10,10,22,0.96));
++  border:1px solid rgba(124,109,250,0.14);border-radius:24px;
++  padding:36px 24px;text-align:center;margin-top:56px;position:relative;overflow:hidden;
++  backdrop-filter:blur(16px);box-shadow:0 20px 60px rgba(0,0,0,0.45);
+ }
+-.ctacard::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(124,109,250,.1) 0%,transparent 65%);}
+-.ctacard h2{font-size:1.8rem;font-weight:800;color:var(--white);margin-bottom:.6rem;position:relative;}
+-.ctacard p{color:var(--muted);margin-bottom:2rem;position:relative;}
+-.ctabtns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative;}
++.ctacard::before{
++  content:'';position:absolute;inset:0;
++  background:radial-gradient(ellipse 800px 400px at 50% 100%, rgba(124,109,250,0.10) 0%, transparent 65%);
++  pointer-events:none;
++}
++.ctacard h2{font-family:var(--space);font-size:1.8rem;font-weight:900;letter-spacing:-0.8px;color:var(--white);margin-bottom:8px;position:relative;}
++.ctacard p{color:var(--muted);margin-bottom:22px;position:relative;font-size:14px;}
++.ctabtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative;}
+ 
+-/* ═══════════════ FOOTER ═══════════════ */
++/* FOOTER */
+ footer{
+   position:relative;z-index:1;
+-  background:var(--s1);border-top:1px solid var(--border);
+-  padding:1.8rem 2rem;text-align:center;color:var(--muted);font-size:.82rem;margin-top:0;
++  background:rgba(10,10,22,0.9);backdrop-filter:blur(16px);
++  border-top:1px solid rgba(124,109,250,0.08);
++  padding:22px 20px;text-align:center;color:var(--muted);font-size:12.5px;margin-top:0;
+ }
+-footer strong{color:var(--accent);}
+-.flinks{display:flex;justify-content:center;gap:1.5rem;margin-top:.8rem;flex-wrap:wrap;}
+-.flinks a{color:var(--muted);text-decoration:none;font-size:.8rem;transition:color .2s;}
++footer strong{color:var(--white);font-family:var(--space);}
++.flinks{display:flex;justify-content:center;gap:14px;margin-top:12px;flex-wrap:wrap;}
++.flinks a{color:var(--muted);text-decoration:none;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.6px;transition:color .18s;}
+ .flinks a:hover{color:var(--accent);}
+ 
+-@media(max-width:900px){
+-  .pcard{grid-template-columns:5px 1fr;}.pright{flex-direction:row;padding:0 1.5rem 1.5rem;min-width:unset;}
+-  .dgrid{grid-template-columns:1fr;}.sbar{gap:2rem;}
++@media(max-width:960px){
++  .pcard{grid-template-columns:6px 1fr;}
++  .pright{flex-direction:row;padding:12px 16px 16px;min-width:unset;border-left:none;border-top:1px solid rgba(255,255,255,0.04);}
++  .pstatus{order:2;}
+ }
+-@media(max-width:600px){
+-  .nr .na{display:none;}.pcard-num{display:none;}.sbar{gap:1.5rem;}
+-  .pright{flex-direction:column;align-items:flex-start;}
++@media(max-width:640px){
++  nav{height:56px;padding:0 12px 0 10px;}
++  .nr .na{display:none;}
++  .pcard-num{display:none;}
++  .dgrid{grid-template-columns:1fr;}
++  .hero{padding:96px 18px 24px;}
+ }
+ </style>
+ </head>
+ <body>
+-<canvas id="cv"></canvas>
++<canvas id="cosmos"></canvas>
++<canvas id="planetCanvas"></canvas>
+ 
+ <!-- NAV -->
+ <nav>
+   <div class="nb">
+-    <div class="ni">⚡</div>
+-    <div class="nb-name">Akash <span>Pathak</span></div>
++    <div class="planet-logo">◉</div>
++    <div>
++      <div class="nb-name">Akash <span>Pathak</span></div>
++      <div class="nb-sub">Data Scientist Planet • Agra, India</div>
++    </div>
+   </div>
+   <div class="nr">
+-    <a class="na" href="#projects">Projects</a>
++    <a class="na" href="#projects">Missions</a>
+     <a class="na" href="#stack">Stack</a>
+     <a class="na" href="#certs">Certs</a>
+     <a class="na" href="https://github.com/akash-pathak-scientist" target="_blank">GitHub ↗</a>
+-    <a class="nhire" href="mailto:akashpathak.in@gmail.com">Hire Me →</a>
++    <a class="nhire" href="mailto:akashpathak.in@gmail.com">● Hire Me →</a>
+   </div>
+ </nav>
+ 
+ <!-- HERO -->
+ <section class="hero">
+-  <div class="hbadge"><div class="bdot"></div>🎉 7 Projects Complete — Open to Roles</div>
+-  <h1><span class="hg">Akash Pathak</span></h1>
+-  <div class="hrole">Data Analyst</div>
+-  <p class="hsub">
+-    I transform messy datasets into <strong>clear business decisions</strong>.
+-    Specialized in <strong>FinTech, BFSI, Fraud & Product Analytics</strong> — with full-stack pipelines:
+-    SQL → Python → Power BI → Live Dashboards. Recently shipped a <strong>deep-learning CNN (91.71% test acc)</strong> on 20,754 real product images.
+-  </p>
+-  <div class="pills">
+-    <span class="pill pa">SQL</span><span class="pill pa">Python</span>
+-    <span class="pill pg">Power BI</span><span class="pill py">Machine Learning</span>
+-    <span class="pill pb">EDA</span><span class="pill pr">Fraud Detection</span>
+-    <span class="pill pg">RFM Analysis</span><span class="pill po">FinTech</span>
+-    <span class="pill pa">DAX</span><span class="pill pb">Cohort Analysis</span>
+-    <span class="pill pr">Scikit-learn</span><span class="pill pp">Blockchain</span>
+-    <span class="pill py">PyTorch</span><span class="pill pg">CNN / Deep Learning</span>
++  <div class="planet-wrap">
++    <div class="planet-glow"></div>
++    <div class="planet"></div>
++    <div class="planet-ring"></div>
++    <div class="planet-ring r2"></div>
++    <div class="orbit o1"><div class="dot"><div class="dot-label">SQL • 92%</div></div><div class="dot d2"><div class="dot-label">Python</div></div></div>
++    <div class="orbit o2"><div class="dot d3"><div class="dot-label">Power BI</div></div></div>
++    <div class="orbit o3"><div class="dot d4"><div class="dot-label">PyTorch</div></div></div>
+   </div>
+-  <div class="ctas">
+-    <a class="btnp" href="https://github.com/akash-pathak-scientist" target="_blank">🐙 GitHub Profile</a>
+-    <a class="btno" href="#projects">📂 Browse Projects ↓</a>
++
++  <div class="hero-inner">
++    <div class="hero-left">
++      <div class="virt-badge">🪐 <b>Data Scientist Planet</b> — Virtual Mission Control</div>
++      <div class="hbadge"><div class="live-dot"><div class="bdot"></div></div> 7 Missions Complete — Open to Analyst Roles</div>
++      <h1>
++        <span class="hg-line hg">Akash Pathak</span>
++        <span class="hrole">Data Analyst <span>• Planet Data, Orbit Insights</span></span>
++      </h1>
++      <p class="hsub">
++        Welcome to my <strong>virtual data world</strong> — I transform messy datasets into <strong>orbital business decisions</strong>. Specialized in <strong>FinTech, BFSI, Fraud & Product Analytics</strong> with full-stack pipelines <strong>SQL → Python → Power BI → Live Dashboards</strong>. Recently returned from the <em>deep-learning galaxy</em> with a <strong>CNN at 91.71% test acc</strong> on <strong>20,754 real product images</strong>.
++      </p>
++      <div class="pills">
++        <span class="pill pa">🛰 SQL</span><span class="pill pa">🐍 Python</span>
++        <span class="pill pg">📊 Power BI</span><span class="pill py">🤖 Machine Learning</span>
++        <span class="pill pb">🔍 EDA</span><span class="pill pr">🛡️ Fraud Detection</span>
++        <span class="pill pg">🧲 RFM Analysis</span><span class="pill po">💳 FinTech</span>
++        <span class="pill py">🔥 PyTorch</span><span class="pill pg">🧠 CNN / Deep Learning</span>
++      </div>
++      <div class="ctas">
++        <a class="btnp" href="#projects">🚀 Enter Planet ↓</a>
++        <a class="btno" href="https://github.com/akash-pathak-scientist" target="_blank">🐙 GitHub Universe</a>
++        <a class="btno btn-ghost" href="mailto:akashpathak.in@gmail.com">📧 Signal Me</a>
++      </div>
++    </div>
++
++    <div class="hero-planet-card">
++      <div class="hero-planet-card-head"><b>◉ Planet Status</b><span>LIVE • 7/7 Missions</span></div>
++      <div class="hero-planet-preview">
++        <div style="position:relative;width:140px;height:140px;">
++          <div class="mini-planet"></div>
++          <div class="mini-orbit"><div class="mini-dot"></div></div>
++          <div class="mini-orbit" style="width:122%;height:122%;left:-11%;top:-11%;animation-duration:11s;"><div class="mini-dot" style="background:var(--blue);"></div></div>
++        </div>
++        <div style="position:absolute;right:12px;bottom:12px;background:rgba(10,10,22,0.88);border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(10px);padding:8px 10px;border-radius:12px;min-width:132px;">
++          <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.8px;text-transform:uppercase;color:var(--muted);font-weight:800;">Deep Learning</div>
++          <div style="font-family:var(--space);font-size:13px;font-weight:900;color:var(--white);margin-top:3px;">91.71% <span style="color:var(--green);font-size:11px;">test acc</span></div>
++          <div style="font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px;">20,754 real images • CNN</div>
++        </div>
++      </div>
++      <div class="hero-planet-stats">
++        <div class="hps"><b>7 / 7</b><span>Missions</span></div>
++        <div class="hps"><b>786k</b><span>Rows/Images</span></div>
++        <div class="hps"><b style="color:var(--green)">98.14%</b><span>Best AUC</span></div>
++      </div>
++      <div style="padding:0 14px 14px;display:flex;gap:8px;">
++        <a class="btnp" style="flex:1;justify-content:center;padding:10px 12px;font-size:12px;" href="https://colab.research.google.com/github/akash-pathak-scientist/product-image-classifier-cnn/blob/main/notebooks/product_image_classifier_colab.ipynb" target="_blank">▶️ Launch Colab</a>
++        <a class="btno" style="flex:1;justify-content:center;padding:10px 12px;font-size:12px;" href="projects/p07-cnn.html">📊 Explore</a>
++      </div>
++    </div>
+   </div>
+-  <div class="sc"><span>Scroll to explore</span><div class="sr">↓</div></div>
++
++  <div class="sc"><span>Descend to surface</span><div class="sr">↓</div></div>
+ </section>
+ 
+ <!-- STATS BAR -->
+ <div class="sbar">
+-  <div class="si"><span class="sn" data-count="7">0</span><div class="sl">Projects Complete</div></div>
++  <div class="si"><span class="sn" data-count="7">0</span><div class="sl">Missions Complete</div></div>
+   <div class="si"><span class="sn g">7 / 7</span><div class="sl">Live on GitHub</div></div>
+   <div class="si"><span class="sn r">₹30Cr+</span><div class="sl">Data Analyzed</div></div>
+-  <div class="si"><span class="sn y" data-count="786000">0</span><div class="sl">Rows / Images Processed</div></div>
++  <div class="si"><span class="sn y" data-count="786000">0</span><div class="sl">Rows / Images</div></div>
+   <div class="si"><span class="sn" data-count="6">0</span><div class="sl">ML Models</div></div>
+   <div class="si"><span class="sn g">98.14%</span><div class="sl">Best AUC-ROC</div></div>
+ </div>
+ 
+ <div class="wrap">
+ 
+-<!-- ═══════════════ PROJECTS ═══════════════ -->
++<!-- PROJECTS -->
+ <div class="sh" id="projects">
+-  <h2>📂 Portfolio Projects</h2>
+-  <span class="shb">6 of 6 Complete ✅</span>
++  <h2>🛰️ Planetary Missions</h2>
++  <span class="shb">7 / 7 Complete • Enter Orbit</span>
+   <div class="shl"></div>
+ </div>
+ 
+@@ -341,10 +554,7 @@ footer strong{color:var(--accent);}
+     <div class="pstrip" style="background:var(--accent)"></div>
+     <div class="pbody">
+       <div class="pcard-num">01</div>
+-      <div class="phead">
+-        <div class="picon">🏦</div>
+-        <div><div class="ptitle">FinTech Transaction Analytics</div><div class="pdomain">Banking & Payments · Full-Stack Analytics</div></div>
+-      </div>
++      <div class="phead"><div class="picon">🏦</div><div><div class="ptitle">FinTech Transaction Analytics</div><div class="pdomain">Banking & Payments • Mission 01</div></div></div>
+       <p class="pdesc">End-to-end pipeline on <strong>15,000 transactions (simulated FinTech sandbox)</strong> — KPIs, MoM trends, merchant intelligence, RFM segmentation, fraud signals, and a live Flask dashboard with 12 REST APIs.</p>
+       <ul class="presults">
+         <li>🔴 Identified ₹1.45Cr at-risk volume via 3 fraud signal detectors</li>
+@@ -352,16 +562,13 @@ footer strong{color:var(--accent);}
+         <li>📈 30+ SQL queries — Window Functions, CTEs, Cohort Retention</li>
+         <li>📊 9-panel dark dashboard · 12 REST API endpoints · all 200 OK</li>
+       </ul>
+-      <div class="ptags">
+-        <span class="ptag">SQL</span><span class="ptag">Python</span><span class="ptag">Power BI</span>
+-        <span class="ptag">Flask</span><span class="ptag">RFM</span><span class="ptag">Fraud Detection</span><span class="ptag">Pandas</span>
+-      </div>
++      <div class="ptags"><span class="ptag">SQL</span><span class="ptag">Python</span><span class="ptag">Power BI</span><span class="ptag">Flask</span><span class="ptag">RFM</span><span class="ptag">Pandas</span></div>
+     </div>
+     <div class="pright">
+-      <span class="pstatus sdone">✅ Complete</span>
++      <span class="pstatus">✅ Complete</span>
+       <div class="plinks">
+         <a class="repo-btn" href="https://github.com/akash-pathak-scientist/fintech-transaction-analytics" target="_blank">🐙 GitHub ↗</a>
+-        <a class="dash-btn" href="projects/p01-fintech.html" target="_blank" id="dash1">📊 Dashboard ↗</a>
++        <a class="dash-btn" href="projects/p01-fintech.html" target="_blank">📊 Dashboard ↗</a>
+       </div>
+     </div>
+   </div>
+@@ -371,10 +578,7 @@ footer strong{color:var(--accent);}
+     <div class="pstrip" style="background:var(--red)"></div>
+     <div class="pbody">
+       <div class="pcard-num">02</div>
+-      <div class="phead">
+-        <div class="picon">🛡️</div>
+-        <div><div class="ptitle">Credit Card Fraud Detection</div><div class="pdomain">Risk & Fraud · Machine Learning</div></div>
+-      </div>
++      <div class="phead"><div class="picon">🛡️</div><div><div class="ptitle">Credit Card Fraud Detection</div><div class="pdomain">Risk & Fraud • Mission 02</div></div></div>
+       <p class="pdesc">ML pipeline on <strong>50,000 transactions (public credit-card fraud, anonymized — real)</strong> with extreme imbalance (0.174% fraud). 4 models benchmarked — Random Forest 98.14% AUC-ROC.</p>
+       <ul class="presults">
+         <li>🤖 Random Forest → 98.14% AUC-ROC (best model)</li>
+@@ -382,16 +586,13 @@ footer strong{color:var(--accent);}
+         <li>🔍 Feature engineering: log(Amount), Amt_Z, Hour</li>
+         <li>🚨 3 SQL fraud rules: Probe, Velocity, Composite Risk Score</li>
+       </ul>
+-      <div class="ptags">
+-        <span class="ptag">Python</span><span class="ptag">Scikit-learn</span><span class="ptag">Random Forest</span>
+-        <span class="ptag">Isolation Forest</span><span class="ptag">ROC-AUC</span><span class="ptag">Flask</span>
+-      </div>
++      <div class="ptags"><span class="ptag">Python</span><span class="ptag">Scikit-learn</span><span class="ptag">Random Forest</span><span class="ptag">ROC-AUC</span><span class="ptag">Flask</span></div>
+     </div>
+     <div class="pright">
+-      <span class="pstatus sdone">✅ Complete</span>
++      <span class="pstatus">✅ Complete</span>
+       <div class="plinks">
+         <a class="repo-btn" href="https://github.com/akash-pathak-scientist/credit-card-fraud-detection" target="_blank">🐙 GitHub ↗</a>
+-        <a class="dash-btn" href="projects/p02-fraud.html" target="_blank" id="dash2">📊 Dashboard ↗</a>
++        <a class="dash-btn" href="projects/p02-fraud.html" target="_blank">📊 Dashboard ↗</a>
+       </div>
+     </div>
+   </div>
+@@ -401,10 +602,7 @@ footer strong{color:var(--accent);}
+     <div class="pstrip" style="background:var(--green)"></div>
+     <div class="pbody">
+       <div class="pcard-num">03</div>
+-      <div class="phead">
+-        <div class="picon">🛒</div>
+-        <div><div class="ptitle">Customer & Sales Analytics</div><div class="pdomain">Retail / CRM · Business Intelligence</div></div>
+-      </div>
++      <div class="phead"><div class="picon">🛒</div><div><div class="ptitle">Customer & Sales Analytics</div><div class="pdomain">Retail / CRM • Mission 03</div></div></div>
+       <p class="pdesc">Full customer analytics on <strong>50,000 customers & 200,000 orders (simulated retail, ₹69.7Cr)</strong> — RFM, cohort retention, LTV & churn.</p>
+       <ul class="presults">
+         <li>👥 KMeans RFM → Champion · Loyal · At Risk · Dormant</li>
+@@ -412,16 +610,13 @@ footer strong{color:var(--accent);}
+         <li>💰 LTV analysis by segment, city, channel & age group</li>
+         <li>📊 10 dark-theme charts · 12 API endpoints · all 200 OK</li>
+       </ul>
+-      <div class="ptags">
+-        <span class="ptag">SQL</span><span class="ptag">Python</span><span class="ptag">KMeans</span>
+-        <span class="ptag">Cohort</span><span class="ptag">LTV</span><span class="ptag">Flask</span>
+-      </div>
++      <div class="ptags"><span class="ptag">SQL</span><span class="ptag">Python</span><span class="ptag">KMeans</span><span class="ptag">Cohort</span><span class="ptag">Flask</span></div>
+     </div>
+     <div class="pright">
+-      <span class="pstatus sdone">✅ Complete</span>
++      <span class="pstatus">✅ Complete</span>
+       <div class="plinks">
+         <a class="repo-btn" href="https://github.com/akash-pathak-scientist/customer-sales-analytics" target="_blank">🐙 GitHub ↗</a>
+-        <a class="dash-btn" href="projects/p03-sales.html" target="_blank" id="dash3">📊 Dashboard ↗</a>
++        <a class="dash-btn" href="projects/p03-sales.html" target="_blank">📊 Dashboard ↗</a>
+       </div>
+     </div>
+   </div>
+@@ -431,10 +626,7 @@ footer strong{color:var(--accent);}
+     <div class="pstrip" style="background:var(--yellow)"></div>
+     <div class="pbody">
+       <div class="pcard-num">04</div>
+-      <div class="phead">
+-        <div class="picon">📊</div>
+-        <div><div class="ptitle">Finance / MIS Dashboard</div><div class="pdomain">Corporate Finance · CFO Reporting</div></div>
+-      </div>
++      <div class="phead"><div class="picon">📊</div><div><div class="ptitle">Finance / MIS Dashboard</div><div class="pdomain">Corporate Finance • Mission 04</div></div></div>
+       <p class="pdesc">CFO-level MIS across <strong>24 months & 8 departments (simulated finance)</strong> — P&L waterfall, EBITDA bridge, budget variance RAG & YoY.</p>
+       <ul class="presults">
+         <li>💰 FY2024 Revenue ₹13.07Cr | YoY +16.9% growth</li>
+@@ -442,16 +634,13 @@ footer strong{color:var(--accent);}
+         <li>🎯 Budget vs Actual — RAG status for 8 departments</li>
+         <li>🏛️ P&L waterfall + EBITDA bridge + 12 financial charts</li>
+       </ul>
+-      <div class="ptags">
+-        <span class="ptag">Excel</span><span class="ptag">Power BI</span><span class="ptag">DAX</span>
+-        <span class="ptag">P&L</span><span class="ptag">EBITDA</span><span class="ptag">Flask</span>
+-      </div>
++      <div class="ptags"><span class="ptag">Excel</span><span class="ptag">Power BI</span><span class="ptag">DAX</span><span class="ptag">P&L</span><span class="ptag">Flask</span></div>
+     </div>
+     <div class="pright">
+-      <span class="pstatus sdone">✅ Complete</span>
++      <span class="pstatus">✅ Complete</span>
+       <div class="plinks">
+         <a class="repo-btn" href="https://github.com/akash-pathak-scientist/finance-mis-dashboard" target="_blank">🐙 GitHub ↗</a>
+-        <a class="dash-btn" href="projects/p04-finance.html" target="_blank" id="dash4">📊 Dashboard ↗</a>
++        <a class="dash-btn" href="projects/p04-finance.html" target="_blank">📊 Dashboard ↗</a>
+       </div>
+     </div>
+   </div>
+@@ -461,10 +650,7 @@ footer strong{color:var(--accent);}
+     <div class="pstrip" style="background:var(--purple)"></div>
+     <div class="pbody">
+       <div class="pcard-num">05</div>
+-      <div class="phead">
+-        <div class="picon">₿</div>
+-        <div><div class="ptitle">Crypto & Payment Analytics</div><div class="pdomain">Blockchain · Web3 · DeFi Analytics</div></div>
+-      </div>
++      <div class="phead"><div class="picon">₿</div><div><div class="ptitle">Crypto & Payment Analytics</div><div class="pdomain">Blockchain • Mission 05</div></div></div>
+       <p class="pdesc">On-chain analytics across <strong>6 blockchains · 500K transactions (simulated, $2.33B)</strong> — OHLCV, whale detection, wallet segmentation, DeFi TVL & cross-chain correlation.</p>
+       <ul class="presults">
+         <li>₿ 6-chain OHLCV + BTC candlestick chart (365 days)</li>
+@@ -472,44 +658,34 @@ footer strong{color:var(--accent);}
+         <li>🔗 Cross-chain correlation matrix across 6 networks</li>
+         <li>🏦 DeFi TVL tracked across 8 protocols ($25B+ ecosystem)</li>
+       </ul>
+-      <div class="ptags">
+-        <span class="ptag">Python</span><span class="ptag">Blockchain</span><span class="ptag">DeFi</span>
+-        <span class="ptag">Whale Detection</span><span class="ptag">OHLCV</span><span class="ptag">Flask</span>
+-      </div>
++      <div class="ptags"><span class="ptag">Python</span><span class="ptag">Blockchain</span><span class="ptag">DeFi</span><span class="ptag">Flask</span></div>
+     </div>
+     <div class="pright">
+-      <span class="pstatus sdone">✅ Complete</span>
++      <span class="pstatus">✅ Complete</span>
+       <div class="plinks">
+         <a class="repo-btn" href="https://github.com/akash-pathak-scientist/crypto-payment-analytics" target="_blank">🐙 GitHub ↗</a>
+-        <a class="dash-btn" href="projects/p05-crypto.html" target="_blank" id="dash5">📊 Dashboard ↗</a>
++        <a class="dash-btn" href="projects/p05-crypto.html" target="_blank">📊 Dashboard ↗</a>
+       </div>
+     </div>
+   </div>
+ 
+-
+   <!-- P06 -->
+   <div class="pcard" style="--pc:#10b981;">
+     <div class="pstrip" style="background:linear-gradient(135deg,#6366f1,#10b981)"></div>
+     <div class="pbody">
+       <div class="pcard-num">06</div>
+-      <div class="phead">
+-        <div class="picon">🚀</div>
+-        <div><div class="ptitle">CareerPilot AI — Job Search Platform</div><div class="pdomain">AI · Full-Stack · Career Tech · Flask · SPA</div></div>
+-      </div>
++      <div class="phead"><div class="picon">🚀</div><div><div class="ptitle">CareerPilot AI — Job Search Platform</div><div class="pdomain">AI • Full-Stack • Mission 06</div></div></div>
+       <p class="pdesc">End-to-end AI job-search platform: resume import → AI analysis (7 scores) → ATS optimization → job matching (1-100) → cover letter generation → full application tracking with CSV export.</p>
+       <ul class="presults">
+-        <li>🔍 AI resume analysis — ATS, skills, quantification, keywords, formatting scores</li>
+-        <li>🎯 Job matching 1-100 — skill overlap, title similarity, experience relevance</li>
+-        <li>✍️ Company-specific cover letters — generated from resume only, no fabrication</li>
+-        <li>📋 Application tracker — Saved → Applied → Interview → Offer → CSV export</li>
++        <li>🔍 AI resume analysis — ATS, skills, quantification, keywords</li>
++        <li>🎯 Job matching 1-100 — skill overlap, title similarity</li>
++        <li>✍️ Company-specific cover letters — from resume only, no fabrication</li>
++        <li>📋 Application tracker — Saved → Applied → Interview → Offer</li>
+       </ul>
+-      <div class="ptags">
+-        <span class="ptag">Python</span><span class="ptag">Flask</span><span class="ptag">AI/NLP</span>
+-        <span class="ptag">ATS</span><span class="ptag">REST API</span><span class="ptag">SPA</span>
+-      </div>
++      <div class="ptags"><span class="ptag">Python</span><span class="ptag">Flask</span><span class="ptag">AI/NLP</span><span class="ptag">SPA</span></div>
+     </div>
+     <div class="pright">
+-      <span class="pstatus s-done">✅ Complete</span>
++      <span class="pstatus">✅ Complete</span>
+       <div class="plinks">
+         <a class="repo-btn" href="https://github.com/akash-pathak-scientist/careerpilot-ai" target="_blank">🐙 GitHub ↗</a>
+         <a class="dash-btn" href="https://akash-pathak-scientist.github.io/projects/p06-careerpilot.html" target="_blank">🚀 View App ↗</a>
+@@ -517,65 +693,73 @@ footer strong{color:var(--accent);}
+     </div>
+   </div>
+ 
+-
+-  <!-- P07 -->
+-  <div class="pcard" style="--pc:var(--yellow);">
+-    <div class="pstrip" style="background:var(--yellow)"></div>
++  <!-- P07 - CNN PLANET -->
++  <div class="pcard" style="--pc:var(--yellow);border-color:rgba(255,200,87,0.22);box-shadow:0 16px 50px rgba(0,0,0,0.5), 0 0 30px rgba(255,200,87,0.10);">
++    <div class="pstrip" style="background:linear-gradient(180deg,#ffc857,#ff8c42)"></div>
+     <div class="pbody">
+       <div class="pcard-num">07</div>
+-      <div class="phead">
+-        <div class="picon">🧠</div>
+-        <div><div class="ptitle">Product-Image Classifier (CNN)</div><div class="pdomain">Computer Vision · Deep Learning · E-commerce Catalogue</div></div>
+-      </div>
+-      <p class="pdesc">Flipkart-style catalogue auto-categorisation into Apparel / Electronics / Home — a small CNN trained on 20,754 real product images from the public Amazon Reviews 2023 corpus (Hou et al., 2024). MobileNetV3-Small fine-tune + from-scratch baseline, one-click Colab reproduction.</p>
++      <div class="phead"><div class="picon" style="background:linear-gradient(135deg,rgba(255,200,87,0.16),rgba(255,140,66,0.08));border-color:rgba(255,200,87,0.22);">🧠</div><div><div class="ptitle">Product-Image Classifier (CNN) — Flagship</div><div class="pdomain">Computer Vision • Deep Learning • Mission 07</div></div></div>
++      <p class="pdesc">Flipkart-style catalogue auto-categorisation into <strong>Apparel / Electronics / Home</strong> — MobileNetV3-Small fine-tuned on <strong style="color:#ffc857">20,754 real product images</strong> (Amazon Reviews 2023, Hou et al.). From-scratch baseline + one-click Colab.</p>
+       <ul class="presults">
+-        <li>🎯 <strong>91.71% test accuracy</strong> (held-out n=3,114, flip-TTA) — target was 85%</li>
+-        <li>🖼️ 20,754 real product images — every one traceable to its public product page</li>
+-        <li>🤖 MobileNetV3-Small (1.52M params) vs 0.63M from-scratch baseline (84.1% val)</li>
+-        <li>🔍 Confusion-matrix + sub-category analysis — names exactly which pairs fumble &amp; why</li>
++        <li>🎯 <strong>91.71% test accuracy</strong> (held-out n=3,114, flip-TTA) — target 85%</li>
++        <li>🖼️ 20,754 real images — every one traceable to public product page</li>
++        <li>🤖 MobileNetV3-Small (1.52M) vs 0.63M from-scratch (84.1% val)</li>
++        <li>🔍 Confusion-matrix + sub-category error analysis</li>
+       </ul>
+-      <div class="ptags">
+-        <span class="ptag">PyTorch</span><span class="ptag">CNN</span><span class="ptag">Transfer Learning</span>
+-        <span class="ptag">MobileNetV3</span><span class="ptag">torchvision</span><span class="ptag">Confusion Matrix</span><span class="ptag">Colab</span>
+-      </div>
++      <div class="ptags"><span class="ptag">PyTorch</span><span class="ptag">CNN</span><span class="ptag">MobileNetV3</span><span class="ptag">Colab</span></div>
+     </div>
+     <div class="pright">
+-      <span class="pstatus sdone">✅ Complete</span>
++      <span class="pstatus" style="background:rgba(255,200,87,0.12);color:var(--yellow);border-color:rgba(255,200,87,0.24);">⭐ Flagship</span>
+       <div class="plinks">
+         <a class="repo-btn" href="https://github.com/akash-pathak-scientist/product-image-classifier-cnn" target="_blank">🐙 GitHub ↗</a>
+-        <a class="dash-btn" href="projects/p07-cnn.html" target="_blank">📊 Results ↗</a>
++        <a class="dash-btn" href="projects/p07-cnn.html" target="_blank" style="background:rgba(255,200,87,0.12);border-color:rgba(255,200,87,0.22);color:var(--yellow);">📊 Results ↗</a>
+       </div>
+     </div>
+   </div>
+ 
+-</div><!-- /pgrid -->
+-
+-<!-- ═══════════════ TECH STACK ═══════════════ -->
++</div>
+ 
+-<!-- ═══════════ P07 DEEP LEARNING SPOTLIGHT ═══════════ -->
+-<div class="sh"><h2>🧠 Deep Learning Spotlight — CNN Product Classifier</h2><span class="shb">Project 07 · 91.71% test acc</span><div class="shl"></div></div>
++<!-- SPOTLIGHT -->
++<div class="sh"><h2>🧠 Deep Learning Spotlight</h2><span class="shb">CNN • 91.71% test • Virtual Lab</span><div class="shl"></div></div>
+ <style>
+-.spgrid{display:grid;grid-template-columns:1.2fr 1fr;gap:1.5rem;}
++.spgrid{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;}
+ @media(max-width:920px){.spgrid{grid-template-columns:1fr;}}
+-.spimg{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1rem;transition:border-color .2s;}
+-.spimg:hover{border-color:rgba(255,209,102,.4);}
+-.spimg img{width:100%;border-radius:8px;display:block;background:#fff;}
+-.spcap{font-size:.72rem;color:var(--muted);margin-top:.55rem;text-align:center;line-height:1.5;}
+-.sptiles{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1.1rem;}
++.spimg{
++  background:linear-gradient(180deg,rgba(18,18,36,0.92),rgba(10,10,22,0.96));
++  border:1px solid rgba(255,255,255,0.06);border-radius:20px;padding:14px;
++  backdrop-filter:blur(12px);transition:border-color .2s;overflow:hidden;position:relative;
++}
++.spimg::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 400px 200px at 50% 0%, rgba(124,109,250,0.12) 0%, transparent 60%);pointer-events:none;}
++.spimg:hover{border-color:rgba(255,200,87,0.22);}
++.spimg img{width:100%;border-radius:12px;display:block;background:#fff;position:relative;z-index:1;}
++.spcap{font-family:var(--mono);font-size:10px;letter-spacing:0.6px;text-align:center;margin-top:10px;color:var(--muted);position:relative;z-index:1;}
++.sptiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+ @media(max-width:520px){.sptiles{grid-template-columns:repeat(2,1fr);}}
+-.sptile{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.95rem .7rem;text-align:center;position:relative;overflow:hidden;transition:transform .2s,border-color .2s;}
+-.sptile:hover{transform:translateY(-3px);border-color:var(--sc,#ffd166);}
+-.sptile::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--sc,#ffd166);}
+-.spv{font-size:1.3rem;font-weight:900;color:var(--white);}
+-.spl{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-top:.28rem;}
+-.sprow{margin:.5rem 0;}
+-.splink{display:inline-block;margin-top:.9rem;font-size:.74rem;font-weight:700;color:var(--yellow);text-decoration:none;border:1px solid rgba(255,209,102,.35);border-radius:9px;padding:.42rem .9rem;transition:all .2s;}
+-.splink:hover{background:var(--yellow);color:#000;}
+-.spex{display:grid;grid-template-columns:repeat(6,1fr);gap:.7rem;margin-top:1.1rem;}
++.sptile{
++  background:linear-gradient(180deg,rgba(18,18,36,0.92),rgba(12,12,24,0.96));
++  border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:14px 10px;text-align:center;
++  backdrop-filter:blur(10px);position:relative;overflow:hidden;transition:transform .2s,border-color .2s;
++}
++.sptile:hover{transform:translateY(-2px);border-color:var(--sc, #ffc857);}
++.sptile::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--sc);}
++.spv{font-family:var(--space);font-size:1.35rem;font-weight:900;color:var(--white);}
++.spl{font-family:var(--mono);font-size:9px;letter-spacing:0.8px;text-transform:uppercase;color:var(--muted);margin-top:4px;}
++.sprow{margin:6px 0;}
++.splink{
++  display:inline-flex;align-items:center;gap:6px;margin-top:10px;
++  font-family:var(--mono);font-size:11px;font-weight:800;color:var(--yellow);
++  text-decoration:none;border:1px solid rgba(255,200,87,0.22);background:rgba(255,200,87,0.08);
++  padding:8px 14px;border-radius:999px;transition:all .18s;
++}
++.splink:hover{background:var(--yellow);color:#020208;}
++.spex{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:14px;}
+ @media(max-width:760px){.spex{grid-template-columns:repeat(3,1fr);}}
+-.spex div{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.5rem;text-align:center;}
+-.spex img{width:100%;height:86px;object-fit:contain;background:#fff;border-radius:6px;}
+-.spex p{font-size:.6rem;color:var(--muted);margin-top:.35rem;line-height:1.35;}
++.spex div{
++  background:linear-gradient(180deg,rgba(18,18,36,0.88),rgba(12,12,24,0.94));
++  border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:8px;text-align:center;backdrop-filter:blur(10px);
++}
++.spex img{width:100%;height:86px;object-fit:contain;background:#fff;border-radius:10px;}
++.spex p{font-family:var(--mono);font-size:9px;letter-spacing:0.5px;color:var(--muted);margin-top:6px;}
+ </style>
+ 
+ <div class="sp" id="spotlight">
+@@ -583,32 +767,27 @@ footer strong{color:var(--accent);}
+     <div>
+       <div class="spimg">
+         <img loading="lazy" src="https://raw.githubusercontent.com/akash-pathak-scientist/product-image-classifier-cnn/main/reports/confusion_matrix.png" alt="CNN confusion matrix — test accuracy 91.71%"/>
+-        <div class="spcap"><strong style="color:var(--white)">Real confusion matrix</strong> — held-out test set, n=3,114 · Apparel / Electronics / Home</div>
++        <div class="spcap"><strong style="color:var(--white)">Real confusion matrix</strong> — held-out test n=3,114 • Virtual Lab Results</div>
+       </div>
+     </div>
+     <div>
+       <div class="sptiles">
+-        <div class="sptile" style="--sc:#00c9a7"><div class="spv" style="color:var(--green)">91.71%</div><div class="spl">Test Accuracy</div></div>
+-        <div class="sptile" style="--sc:#ffd166"><div class="spv">92.10%</div><div class="spl">Peak Val Acc</div></div>
++        <div class="sptile" style="--sc:#00e6a0"><div class="spv" style="color:var(--green)">91.71%</div><div class="spl">Test Accuracy</div></div>
++        <div class="sptile" style="--sc:#ffc857"><div class="spv">92.10%</div><div class="spl">Peak Val Acc</div></div>
+         <div class="sptile" style="--sc:#7c6dfa"><div class="spv">20,754</div><div class="spl">Real Images</div></div>
+-        <div class="sptile" style="--sc:#4ecdc4"><div class="spv">1.52M</div><div class="spl">Params (MobileNetV3-S)</div></div>
+-        <div class="sptile" style="--sc:#ff9f43"><div class="spv">3,114</div><div class="spl">Held-out Test Imgs</div></div>
+-        <div class="sptile" style="--sc:#ff6b6b"><div class="spv">84.1%</div><div class="spl">From-Scratch Baseline</div></div>
++        <div class="sptile" style="--sc:#38d9ff"><div class="spv">1.52M</div><div class="spl">Params</div></div>
++        <div class="sptile" style="--sc:#ff8c42"><div class="spv">3,114</div><div class="spl">Held-out Test</div></div>
++        <div class="sptile" style="--sc:#ff5a6a"><div class="spv">84.1%</div><div class="spl">Baseline</div></div>
+       </div>
+-      <div class="sc2-row"><span style="font-size:.78rem;color:var(--text)">Electronics → Home</span><span style="font-size:.72rem;color:var(--muted)">68 imgs · 6.6%</span></div>
++      <div class="sc2-row" style="font-family:var(--mono);font-size:11px;"><span style="color:#d8d8ff;">Electronics → Home</span><span style="color:var(--muted)">68 • 6.6%</span></div>
+       <div class="pbar"><div class="pb2" data-w="6.6" style="background:var(--red)"></div></div>
+       <div class="sprow"></div>
+-      <div class="sc2-row"><span style="font-size:.78rem;color:var(--text)">Home → Electronics</span><span style="font-size:.72rem;color:var(--muted)">63 imgs · 6.0%</span></div>
++      <div class="sc2-row" style="font-family:var(--mono);font-size:11px;"><span style="color:#d8d8ff;">Home → Electronics</span><span style="color:var(--muted)">63 • 6.0%</span></div>
+       <div class="pbar"><div class="pb2" data-w="6.0" style="background:var(--orange)"></div></div>
+       <div class="sprow"></div>
+-      <div class="sc2-row"><span style="font-size:.78rem;color:var(--text)">Apparel → Home</span><span style="font-size:.72rem;color:var(--muted)">51 imgs · 5.0%</span></div>
++      <div class="sc2-row" style="font-family:var(--mono);font-size:11px;"><span style="color:#d8d8ff;">Apparel → Home</span><span style="color:var(--muted)">51 • 5.0%</span></div>
+       <div class="pbar"><div class="pb2" data-w="5.0" style="background:var(--yellow)"></div></div>
+-      <div class="sprow"></div>
+-      <div class="sc2-row"><span style="font-size:.78rem;color:var(--text)">Apparel → Electronics</span><span style="font-size:.72rem;color:var(--muted)">37 imgs · 3.6%</span></div>
+-      <div class="pbar"><div class="pb2" data-w="3.6" style="background:var(--blue)"></div></div>
+-      <div style="text-align:center">
+-        <a class="splink" href="projects/p07-cnn.html" target="_blank">📊 Full CNN results &amp; error analysis ↗</a>
+-      </div>
++      <div style="text-align:center"><a class="splink" href="projects/p07-cnn.html" target="_blank">📊 Full CNN Lab ↗</a></div>
+     </div>
+   </div>
+   <div class="spex">
+@@ -619,64 +798,42 @@ footer strong{color:var(--accent);}
+     <div><img loading="lazy" src="https://raw.githubusercontent.com/akash-pathak-scientist/product-image-classifier-cnn/main/reports/examples_misclassified/true-home_pred-apparel_B019GKUWHK.jpg" alt=""/><p>Home → Apparel</p></div>
+     <div><img loading="lazy" src="https://raw.githubusercontent.com/akash-pathak-scientist/product-image-classifier-cnn/main/reports/examples_misclassified/true-home_pred-electronics_B0796GW6R6.jpg" alt=""/><p>Home → Electronics</p></div>
+   </div>
+-  <p style="font-size:.68rem;color:var(--muted);margin-top:.6rem;text-align:center">Real misclassified test images — 20,754-image public dataset (Amazon Reviews 2023), seed-42 split, full provenance in the repo</p>
+ </div>
+ 
+-<div class="sh" id="stack"><h2>🛠️ Tech Stack</h2><span class="shb">Skills</span><div class="shl"></div></div>
++<div class="sh" id="stack"><h2>🛰️ Mission Control — Tech Stack</h2><span class="shb">Virtual Lab</span><div class="shl"></div></div>
+ <div class="sgrid">
+-  <div class="sc2">
+-    <div class="sc2-label">Databases & Query</div>
+-    <div class="sc2-items">
+-      <div><div class="sc2-row"><span>MySQL / PostgreSQL</span><span style="color:var(--accent);font-size:.74rem;font-weight:700;">Advanced</span></div><div class="pbar"><div class="pb2" data-w="92" style="background:var(--accent)"></div></div></div>
+-      <div><div class="sc2-row"><span>Window Functions · CTEs</span><span style="color:var(--accent);font-size:.74rem;font-weight:700;">Expert</span></div><div class="pbar"><div class="pb2" data-w="90" style="background:var(--accent)"></div></div></div>
+-      <div><div class="sc2-row"><span>MS SQL Server</span><span style="color:var(--accent);font-size:.74rem;font-weight:700;">Proficient</span></div><div class="pbar"><div class="pb2" data-w="75" style="background:var(--accent)"></div></div></div>
+-    </div>
+-  </div>
+-  <div class="sc2">
+-    <div class="sc2-label">Python Ecosystem</div>
+-    <div class="sc2-items">
+-      <div><div class="sc2-row"><span>Pandas / NumPy</span><span style="color:var(--green);font-size:.74rem;font-weight:700;">Expert</span></div><div class="pbar"><div class="pb2" data-w="92" style="background:var(--green)"></div></div></div>
+-      <div><div class="sc2-row"><span>Scikit-learn · ML</span><span style="color:var(--green);font-size:.74rem;font-weight:700;">Proficient</span></div><div class="pbar"><div class="pb2" data-w="80" style="background:var(--green)"></div></div></div>
+-      <div><div class="sc2-row"><span>Matplotlib · Seaborn</span><span style="color:var(--green);font-size:.74rem;font-weight:700;">Advanced</span></div><div class="pbar"><div class="pb2" data-w="88" style="background:var(--green)"></div></div></div>
+-    </div>
+-  </div>
+-  <div class="sc2">
+-    <div class="sc2-label">Visualization & BI</div>
+-    <div class="sc2-items">
+-      <div><div class="sc2-row"><span>Power BI + DAX</span><span style="color:var(--yellow);font-size:.74rem;font-weight:700;">Advanced</span></div><div class="pbar"><div class="pb2" data-w="87" style="background:var(--yellow)"></div></div></div>
+-      <div><div class="sc2-row"><span>Tableau</span><span style="color:var(--yellow);font-size:.74rem;font-weight:700;">Proficient</span></div><div class="pbar"><div class="pb2" data-w="75" style="background:var(--yellow)"></div></div></div>
+-      <div><div class="sc2-row"><span>Excel (Pivot · VBA)</span><span style="color:var(--yellow);font-size:.74rem;font-weight:700;">Advanced</span></div><div class="pbar"><div class="pb2" data-w="90" style="background:var(--yellow)"></div></div></div>
+-    </div>
+-  </div>
+-  <div class="sc2">
+-    <div class="sc2-label">Analytics</div>
+-    <div class="sc2-items">
+-      <div><div class="sc2-row"><span>RFM · Cohort · LTV</span><span style="color:var(--blue);font-size:.74rem;font-weight:700;">Expert</span></div><div class="pbar"><div class="pb2" data-w="90" style="background:var(--blue)"></div></div></div>
+-      <div><div class="sc2-row"><span>EDA · Storytelling</span><span style="color:var(--blue);font-size:.74rem;font-weight:700;">Expert</span></div><div class="pbar"><div class="pb2" data-w="93" style="background:var(--blue)"></div></div></div>
+-      <div><div class="sc2-row"><span>Fraud · Anomaly Detect</span><span style="color:var(--blue);font-size:.74rem;font-weight:700;">Advanced</span></div><div class="pbar"><div class="pb2" data-w="85" style="background:var(--blue)"></div></div></div>
+-    </div>
+-  </div>
+-  <div class="sc2">
+-    <div class="sc2-label">Deep Learning & Computer Vision</div>
+-    <div class="sc2-items">
+-      <div><div class="sc2-row"><span>PyTorch · torchvision</span><span style="color:var(--orange);font-size:.74rem;font-weight:700;">Project-Proven</span></div><div class="pbar"><div class="pb2" data-w="72" style="background:var(--orange)"></div></div></div>
+-      <div><div class="sc2-row"><span>Transfer Learning · MobileNetV3</span><span style="color:var(--orange);font-size:.74rem;font-weight:700;">Project-Proven</span></div><div class="pbar"><div class="pb2" data-w="70" style="background:var(--orange)"></div></div></div>
+-      <div><div class="sc2-row"><span>Confusion-Matrix &amp; Error Analysis</span><span style="color:var(--orange);font-size:.74rem;font-weight:700;">Project-Proven</span></div><div class="pbar"><div class="pb2" data-w="82" style="background:var(--orange)"></div></div></div>
+-    </div>
+-  </div>
++  <div class="sc2"><div class="sc2-label">Databases & Query</div><div class="sc2-items">
++      <div><div class="sc2-row"><span>MySQL / PostgreSQL</span><span style="color:var(--accent);font-size:11px;font-weight:800;">Advanced</span></div><div class="pbar"><div class="pb2" data-w="92" style="background:var(--accent)"></div></div></div>
++      <div><div class="sc2-row"><span>Window Functions · CTEs</span><span style="color:var(--accent);font-size:11px;font-weight:800;">Expert</span></div><div class="pbar"><div class="pb2" data-w="90" style="background:var(--accent)"></div></div></div>
++      <div><div class="sc2-row"><span>MS SQL Server</span><span style="color:var(--accent);font-size:11px;font-weight:800;">Proficient</span></div><div class="pbar"><div class="pb2" data-w="75" style="background:var(--accent)"></div></div></div>
++  </div></div>
++  <div class="sc2"><div class="sc2-label">Python Ecosystem</div><div class="sc2-items">
++      <div><div class="sc2-row"><span>Pandas / NumPy</span><span style="color:var(--green);font-size:11px;font-weight:800;">Expert</span></div><div class="pbar"><div class="pb2" data-w="92" style="background:var(--green)"></div></div></div>
++      <div><div class="sc2-row"><span>Scikit-learn · ML</span><span style="color:var(--green);font-size:11px;font-weight:800;">Proficient</span></div><div class="pbar"><div class="pb2" data-w="80" style="background:var(--green)"></div></div></div>
++      <div><div class="sc2-row"><span>Matplotlib · Seaborn</span><span style="color:var(--green);font-size:11px;font-weight:800;">Advanced</span></div><div class="pbar"><div class="pb2" data-w="88" style="background:var(--green)"></div></div></div>
++  </div></div>
++  <div class="sc2"><div class="sc2-label">Visualization & BI</div><div class="sc2-items">
++      <div><div class="sc2-row"><span>Power BI + DAX</span><span style="color:var(--yellow);font-size:11px;font-weight:800;">Advanced</span></div><div class="pbar"><div class="pb2" data-w="87" style="background:var(--yellow)"></div></div></div>
++      <div><div class="sc2-row"><span>Tableau</span><span style="color:var(--yellow);font-size:11px;font-weight:800;">Proficient</span></div><div class="pbar"><div class="pb2" data-w="75" style="background:var(--yellow)"></div></div></div>
++      <div><div class="sc2-row"><span>Excel (Pivot · VBA)</span><span style="color:var(--yellow);font-size:11px;font-weight:800;">Advanced</span></div><div class="pbar"><div class="pb2" data-w="90" style="background:var(--yellow)"></div></div></div>
++  </div></div>
++  <div class="sc2"><div class="sc2-label">Deep Learning & CV</div><div class="sc2-items">
++      <div><div class="sc2-row"><span>PyTorch · torchvision</span><span style="color:var(--orange);font-size:11px;font-weight:800;">Project-Proven</span></div><div class="pbar"><div class="pb2" data-w="72" style="background:var(--orange)"></div></div></div>
++      <div><div class="sc2-row"><span>Transfer Learning · MobileNetV3</span><span style="color:var(--orange);font-size:11px;font-weight:800;">Project-Proven</span></div><div class="pbar"><div class="pb2" data-w="70" style="background:var(--orange)"></div></div></div>
++      <div><div class="sc2-row"><span>Confusion-Matrix & Error Analysis</span><span style="color:var(--orange);font-size:11px;font-weight:800;">Project-Proven</span></div><div class="pbar"><div class="pb2" data-w="82" style="background:var(--orange)"></div></div></div>
++  </div></div>
+ </div>
+ 
+-<!-- ═══════════════ WHAT MAKES ME DIFFERENT ═══════════════ -->
+-<div class="sh"><h2>🔥 What Makes Me Different</h2><span class="shb">Mindset</span><div class="shl"></div></div>
++<div class="sh"><h2>🔥 What Makes This Planet Different</h2><span class="shb">Philosophy</span><div class="shl"></div></div>
+ <div class="dgrid">
+-  <div class="dc"><div class="dc-icon">🎯</div><div><div class="dc-title">Business-First Thinking</div><div class="dc-sub">I frame the business problem before opening a dataset. Every analysis starts with a question that matters to a decision-maker.</div></div></div>
+-  <div class="dc"><div class="dc-icon">🔗</div><div><div class="dc-title">Full-Stack Analytics</div><div class="dc-sub">Every project: SQL + Python + Dashboard — a complete pipeline. Not just isolated scripts or charts.</div></div></div>
+-  <div class="dc"><div class="dc-icon">💬</div><div><div class="dc-title">Stakeholder-Ready Insights</div><div class="dc-sub">Insights written for CFOs, PMs, and business teams — not just data reviewers. Clarity over complexity, always.</div></div></div>
+-  <div class="dc"><div class="dc-icon">🏗️</div><div><div class="dc-title">Clean, Portfolio-Ready Code</div><div class="dc-sub">Modular Python, clean SQL (Window Functions & CTEs), Flask REST APIs — portfolio demos that run end-to-end.</div></div></div>
+-  <div class="dc"><div class="dc-icon">🧠</div><div><div class="dc-title">Deep Learning, Measured</div><div class="dc-sub">CNN product classifier at 91.71% test accuracy on 20,754 real e-commerce images — with honest baselines and full confusion-matrix analysis.</div></div></div>
++  <div class="dc"><div class="dc-icon">🎯</div><div><div class="dc-title">Business-First Orbit</div><div class="dc-sub">I frame the business problem before opening a dataset. Every mission starts with a question that matters in the real world.</div></div></div>
++  <div class="dc"><div class="dc-icon">🔗</div><div><div class="dc-title">Full-Stack Missions</div><div class="dc-sub">Every project: SQL → Python → Dashboard — a complete launch pipeline, not just isolated scripts.</div></div></div>
++  <div class="dc"><div class="dc-icon">💬</div><div><div class="dc-title">Stakeholder-Ready Signals</div><div class="dc-sub">Insights beamed for CFOs and PMs, not just data teams. Clarity over complexity, always.</div></div></div>
++  <div class="dc"><div class="dc-icon">🏗️</div><div><div class="dc-title">Clean, Portfolio-Ready Code</div><div class="dc-sub">Modular Python, clean SQL, Flask REST APIs — portfolio demos that run end-to-end in your browser.</div></div></div>
++  <div class="dc"><div class="dc-icon">🧠</div><div><div class="dc-title">Deep Learning, Measured</div><div class="dc-sub">CNN at 91.71% test accuracy on 20,754 real e-commerce images — with honest baselines and full error analysis.</div></div></div>
++  <div class="dc"><div class="dc-icon">🌌</div><div><div class="dc-title">Virtual Planet Experience</div><div class="dc-sub">You’re not browsing a portfolio — you’re exploring a living data universe. Every scroll is a new orbit.</div></div></div>
+ </div>
+ 
+-<!-- ═══════════════ CERTIFICATIONS ═══════════════ -->
+ <div class="sh" id="certs"><h2>🏅 Certifications</h2><span class="shb">Verified</span><div class="shl"></div></div>
+ <div class="ccgrid">
+   <div class="cert"><div class="clogo">🎓</div><div><div class="ctitle">Google Data Analytics Professional</div><div class="cissuer">Coursera / Google · 2024</div></div><span class="cbadge">Certified</span></div>
+@@ -685,82 +842,131 @@ footer strong{color:var(--accent);}
+   <div class="cert"><div class="clogo">🐍</div><div><div class="ctitle">Python for Data Science</div><div class="cissuer">IBM / Coursera</div></div><span class="cbadge">Certified</span></div>
+ </div>
+ 
+-<!-- ═══════════════ CONTACT ═══════════════ -->
+ <div class="ctacard">
+-  <h2>💬 Let's Build Something Together</h2>
+-  <p>Open to Data Analyst roles · Collaborations · Freelance Analytics Projects · India & Remote</p>
++  <h2>🛰️ Ready to Land on This Planet?</h2>
++  <p>You’ve explored the Data Scientist Planet — 7 missions, 786k+ data points, real deep learning. Let’s build the next mission together.</p>
+   <div class="ctabtns">
+-    <a class="btnp" href="mailto:akashpathak.in@gmail.com">📧 Email Me</a>
+-    <a class="btno" href="https://linkedin.com/in/akash-pathak-data-scientist" target="_blank">💼 LinkedIn</a>
+-    <a class="btno" href="https://github.com/akash-pathak-scientist" target="_blank">🐙 GitHub</a>
++    <a class="btnp" href="mailto:akashpathak.in@gmail.com">📧 Beam Me a Signal</a>
++    <a class="btno" href="https://linkedin.com/in/akash-pathak-data-scientist" target="_blank">💼 LinkedIn Dock</a>
++    <a class="btno" href="https://github.com/akash-pathak-scientist" target="_blank">🐙 GitHub Orbit</a>
+   </div>
+ </div>
+ 
+-</div><!-- /wrap -->
++</div>
+ 
+ <footer>
+-  <strong>Akash Pathak</strong> · Data Analytics Portfolio · India 🇮🇳 · 7 Projects Complete ✅
++  <strong>Akash Pathak</strong> · Data Scientist Planet 🌌 · Virtual Mission Control · India 🇮🇳 · 7 Missions Complete ✅
+   <div class="flinks">
+-    <a href="https://github.com/akash-pathak-scientist" target="_blank">GitHub Profile</a>
++    <a href="https://github.com/akash-pathak-scientist" target="_blank">GitHub Universe</a>
+     <a href="https://github.com/akash-pathak-scientist/fintech-transaction-analytics" target="_blank">P01: FinTech</a>
+     <a href="https://github.com/akash-pathak-scientist/credit-card-fraud-detection" target="_blank">P02: Fraud</a>
+     <a href="https://github.com/akash-pathak-scientist/customer-sales-analytics" target="_blank">P03: Sales</a>
+     <a href="https://github.com/akash-pathak-scientist/finance-mis-dashboard" target="_blank">P04: Finance</a>
+     <a href="https://github.com/akash-pathak-scientist/crypto-payment-analytics" target="_blank">P05: Crypto</a>
+-    <a href="https://github.com/akash-pathak-scientist/careerpilot-ai" target="_blank">P06: CareerPilot AI</a>
+-    <a href="https://github.com/akash-pathak-scientist/product-image-classifier-cnn" target="_blank">P07: CNN Classifier</a>
++    <a href="https://github.com/akash-pathak-scientist/careerpilot-ai" target="_blank">P06: CareerPilot</a>
++    <a href="https://github.com/akash-pathak-scientist/product-image-classifier-cnn" target="_blank">P07: CNN Planet</a>
+   </div>
+-  <div style="margin-top:.8rem;font-size:.72rem;color:rgba(255,255,255,.1);">SQL · Python · Power BI · Machine Learning · Flask · Blockchain</div>
++  <div style="margin-top:10px;font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.28);">SQL · Python · Power BI · Machine Learning · PyTorch · Virtual World Ready</div>
++  <div style="margin-top:8px;font-size:11px;color:var(--muted);">Crafted with 🌌 on Planet Data — where virtuality meets reality.</div>
+ </footer>
+ 
+ <script>
+-/* PARTICLES */
++/* COSMOS - stars + nebula + shooting stars */
+ (function(){
+-  const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+-  let W,H,pts=[];
+-  const C=['#7c6dfa','#00c9a7','#ff6b6b','#ffd166','#4ecdc4','#a855f7'];
+-  function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;init();}
+-  function init(){pts=[];for(let i=0;i<60;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.32,vy:(Math.random()-.5)*.32,r:Math.random()*1.8+.4,c:C[Math.floor(Math.random()*C.length)]});}
++  const c=document.getElementById('cosmos'),x=c.getContext('2d');
++  const p=document.getElementById('planetCanvas'),y=p.getContext('2d');
++  let W,H; const stars=[]; const S=220;
++  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;p.width=W;p.height=H;init();}
++  function init(){
++    stars.length=0;
++    for(let i=0;i<S;i++) stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+0.2,a:Math.random()*0.7+0.2,vx:(Math.random()-0.5)*0.06,vy:(Math.random()-0.5)*0.06,tw:Math.random()*3});
++  }
++  let t=0;
+   function tick(){
+-    ctx.clearRect(0,0,W,H);
+-    pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.c+'44';ctx.fill();});
+-    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.hypot(dx,dy);if(d<125){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(124,109,250,${.1*(1-d/125)})`;ctx.lineWidth=.65;ctx.stroke();}}
++    t+=0.006;
++    x.clearRect(0,0,W,H);
++    // nebula blobs
++    const g=x.createRadialGradient(W*0.72,H*0.18,0,W*0.72,H*0.18,480);
++    g.addColorStop(0,'rgba(124,109,250,0.11)');g.addColorStop(1,'transparent');x.fillStyle=g;x.fillRect(0,0,W,H);
++    const g2=x.createRadialGradient(W*0.12,H*0.82,0,W*0.12,H*0.82,520);
++    g2.addColorStop(0,'rgba(56,217,255,0.08)');g2.addColorStop(1,'transparent');x.fillStyle=g2;x.fillRect(0,0,W,H);
++    const g3=x.createRadialGradient(W*0.88,H*0.88,0,W*0.88,H*0.88,380);
++    g3.addColorStop(0,'rgba(232,121,249,0.07)');g3.addColorStop(1,'transparent');x.fillStyle=g3;x.fillRect(0,0,W,H);
++    // stars
++    stars.forEach(s=>{
++      s.x+=s.vx; s.y+=s.vy; if(s.x<0) s.x=W; if(s.x>W) s.x=0; if(s.y<0) s.y=H; if(s.y>H) s.y=0;
++      const tw = 0.55 + Math.sin(t*1.8 + s.tw)*0.45;
++      x.globalAlpha = s.a*tw;
++      x.beginPath();x.arc(s.x,s.y,s.r,0,Math.PI*2);x.fillStyle='#fff';x.fill();
++      // glow for bright stars
++      if(s.r>1.0){ x.globalAlpha=s.a*tw*0.18; x.beginPath();x.arc(s.x,s.y,s.r*3.5,0,Math.PI*2);x.fillStyle='#a5b4fc';x.fill(); }
++    });
++    x.globalAlpha=1;
++    // faint grid
++    x.strokeStyle='rgba(124,109,250,0.04)';x.lineWidth=1;
++    for(let i=0;i<W;i+=90){ x.beginPath();x.moveTo(i+ (t*18)%90,0);x.lineTo(i+ (t*18)%90,H);x.stroke();}
+     requestAnimationFrame(tick);
+   }
+-  addEventListener('resize',resize);resize();tick();
++  // planet canvas - subtle data streams orbiting
++  function planetTick(){
++    y.clearRect(0,0,W,H);
++    // draw faint data streams (arcs) near planet area (right side)
++    const cx=W*0.78, cy=H*0.52, R=Math.min(280, W*0.18);
++    y.strokeStyle='rgba(124,109,250,0.07)';y.setLineDash([4,10]);y.lineWidth=1;
++    y.beginPath();y.arc(cx,cy,R*1.18,0,Math.PI*2);y.stroke();
++    y.beginPath();y.arc(cx,cy,R*1.38,0,Math.PI*2);y.stroke();
++    y.setLineDash([]);
++    // orbiting dots
++    const time=Date.now()*0.00042;
++    for(let i=0;i<3;i++){
++      const ang=time*(0.6+i*0.32)+i*2.1; const r=R*(1.18+i*0.20);
++      const px=cx+Math.cos(ang)*r, py=cy+Math.sin(ang)*r*0.34;
++      y.beginPath();y.arc(px,py,2.2,0,Math.PI*2);y.fillStyle=i==0?'#7c6dfa':i==1?'#38d9ff':'#00e6a0';y.shadowBlur=8;y.shadowColor=y.fillStyle;y.fill();y.shadowBlur=0;
++    }
++    requestAnimationFrame(planetTick);
++  }
++  addEventListener('resize',resize);resize();tick();planetTick();
+ })();
+ 
+-/* SCROLL REVEAL */
+-const io=new IntersectionObserver(entries=>{
+-  entries.forEach((e,i)=>{
++/* Reveal + count */
++const io=new IntersectionObserver(es=>{
++  es.forEach((e,i)=>{
+     if(e.isIntersecting){
+       setTimeout(()=>{
+         e.target.classList.add('vis');
+-        e.target.querySelectorAll('.pb2[data-w]').forEach(b=>{
+-          setTimeout(()=>{b.style.width=b.dataset.w+'%';},400);
+-        });
+-      },i*70);
++        e.target.querySelectorAll('.pb2[data-w]').forEach(b=>{setTimeout(()=>b.style.width=b.dataset.w+'%',420),i*60});
++      },i*55);
+       io.unobserve(e.target);
+     }
+   });
+-},{threshold:.1});
+-document.querySelectorAll('.pcard,.sc2,.dc,.cert,.sp').forEach((el,i)=>{el.dataset.i=i;io.observe(el);});
+-
+-/* COUNT-UP */
++},{threshold:0.1});
++document.querySelectorAll('.pcard,.sc2,.dc,.cert,.sp').forEach(el=>io.observe(el));
+ function countUp(el,to){
+   const fmt=to>=1000;let n=0,step=Math.max(1,Math.ceil(to/60));
+-  const t=setInterval(()=>{n=Math.min(n+step,to);el.textContent=fmt?n.toLocaleString():n;if(n>=to)clearInterval(t);},28);
++  const t=setInterval(()=>{n=Math.min(n+step,to);el.textContent=fmt?n.toLocaleString():n;if(n>=to)clearInterval(t);},26);
+ }
+-const cio=new IntersectionObserver(entries=>{
+-  entries.forEach(e=>{if(e.isIntersecting){const v=parseInt(e.target.dataset.count);if(!isNaN(v))countUp(e.target,v);cio.unobserve(e.target);}});
+-},{threshold:.6});
++const cio=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const v=parseInt(e.target.dataset.count);if(!isNaN(v))countUp(e.target,v);cio.unobserve(e.target);}});},{threshold:0.5});
+ document.querySelectorAll('[data-count]').forEach(el=>cio.observe(el));
+ 
+-/* NAV highlight */
+-const sio=new IntersectionObserver(entries=>{
+-  entries.forEach(e=>{if(e.isIntersecting)document.querySelectorAll('.na').forEach(a=>{a.style.color=a.getAttribute('href')==='#'+e.target.id?'var(--accent)':'';});});
+-},{threshold:.4});
+-document.querySelectorAll('[id]').forEach(s=>sio.observe(s));
++/* 3D tilt on cards */
++document.querySelectorAll('.pcard').forEach(card=>{
++  card.addEventListener('mousemove',e=>{
++    const r=card.getBoundingClientRect();
++    const x=(e.clientX - r.left)/r.width -0.5;
++    const y=(e.clientY - r.top)/r.height -0.5;
++    card.style.transform=`perspective(900px) rotateY(${x*4}deg) rotateX(${-y*4}deg) translateY(-2px)`;
++  });
++  card.addEventListener('mouseleave',()=>{card.style.transform='';});
++});
++
++/* Parallax planet */
++addEventListener('mousemove',e=>{
++  const px=(e.clientX/innerWidth -0.5)*14;
++  const py=(e.clientY/innerHeight -0.5)*10;
++  document.querySelectorAll('.planet-wrap').forEach(el=>{
++    el.style.transform=`translateY(-50%) translate(${px}px,${py}px)`;
++  });
++});
+ </script>
+ </body>
+ </html>
+-- 
+2.39.5
+
